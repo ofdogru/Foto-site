@@ -404,9 +404,20 @@
     background:var(--paper-2);
     overflow:hidden;
   }
+  .lightbox-art.is-photo{
+    aspect-ratio:auto;
+    display:flex;
+    justify-content:center;
+    background:var(--paper-2);
+  }
   .lightbox-art canvas{display:block; width:100%; height:100%;}
   .lightbox-art img{
-    display:block; width:100%; height:100%; object-fit:cover;
+    display:block;
+    width:auto;
+    height:auto;
+    max-width:100%;
+    max-height:74vh;
+    object-fit:contain;
     -webkit-user-select:none;
     user-select:none;
     -webkit-user-drag:none;
@@ -535,7 +546,7 @@
   <button class="lightbox-backdrop" id="lbBackdrop" aria-label="Kapat"></button>
   <div class="lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="lbCaption">
     <button class="lightbox-close" id="lbClose" aria-label="Kapat">✕</button>
-    <div class="lightbox-art">
+    <div class="lightbox-art" id="lbArt">
       <canvas id="lbCanvas"></canvas>
       <img id="lbImg" alt="" hidden>
       <span class="frame-no mono" id="lbNo"></span>
@@ -904,6 +915,7 @@
 
   // ---- lightbox ----
   var lightbox = document.getElementById('lightbox');
+  var lbArt = document.getElementById('lbArt');
   var lbCanvas = document.getElementById('lbCanvas');
   var lbImg = document.getElementById('lbImg');
   var lbNo = document.getElementById('lbNo');
@@ -978,6 +990,7 @@
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
     if(f.photo){
+      lbArt.classList.add('is-photo');
       lbImg.src = f.photo;
       lbImg.alt = f.label + ' — ' + f.cap;
       lbImg.draggable = false;
@@ -985,6 +998,7 @@
       lbImg.hidden = false;
       lbCanvas.hidden = true;
     } else {
+      lbArt.classList.remove('is-photo');
       lbCanvas.hidden = false;
       lbImg.hidden = true;
       requestAnimationFrame(function(){ paintFrame(lbCanvas, seed); });
