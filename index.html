@@ -255,6 +255,16 @@
     width:100%;
     height:100%;
   }
+  .frame-art img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    -webkit-user-select:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    pointer-events:none;
+  }
   .frame-no{
     position:absolute;
     top:6px; left:8px;
@@ -395,6 +405,13 @@
     overflow:hidden;
   }
   .lightbox-art canvas{display:block; width:100%; height:100%;}
+  .lightbox-art img{
+    display:block; width:100%; height:100%; object-fit:cover;
+    -webkit-user-select:none;
+    user-select:none;
+    -webkit-user-drag:none;
+  }
+  .lightbox-art canvas[hidden], .lightbox-art img[hidden]{display:none;}
   .lightbox-body{padding:20px 22px 26px;}
   .lightbox-meta{
     display:flex;
@@ -471,7 +488,7 @@
 
   <div class="hero">
     <canvas id="heroCanvas" width="1200" height="500" aria-hidden="true"></canvas>
-    <div class="hero-meta"><span>KODAK PORTRA 400</span><span>N° 001–030</span><span>İSTANBUL, 2026</span></div>
+    <div class="hero-meta"><span>KODAK PORTRA 400</span><span>N° 001–147</span><span>İSTANBUL, 2026</span></div>
     <div class="hero-copy">
       <h1>Işığın kaydı.</h1>
       <p>Sokakta, doğal ışıkla ve çoğu zaman tek karede — 35mm film ve dijitalle çektiğim fotoğraflardan bir seçki.</p>
@@ -501,7 +518,7 @@
 
   <div class="note">
     <span class="dot" aria-hidden="true"></span>
-    <p><strong>Bu kareler örnek yer tutucudur</strong> — grup grup gönderdiğin gerçek fotoğraflar ve açıklamaları bu alanların yerini alacak. Bir kareye tıklayınca büyük halini, açıklamasını ve beğeni butonunu görebilirsin.</p>
+    <p><strong>Sokak dışındaki tüm kareler artık gerçek fotoğraflar.</strong> Sokak kategorisi fotoğraflar eklenene kadar yer tutucu kalacak. Bir kareye tıklayınca büyük halini, çekim bilgilerini ve beğeni butonunu görebilirsin.</p>
   </div>
 
   <div class="grid" id="grid"></div>
@@ -520,13 +537,14 @@
     <button class="lightbox-close" id="lbClose" aria-label="Kapat">✕</button>
     <div class="lightbox-art">
       <canvas id="lbCanvas"></canvas>
+      <img id="lbImg" alt="" hidden>
       <span class="frame-no mono" id="lbNo"></span>
       <span class="frame-cat" id="lbCat"></span>
     </div>
     <div class="lightbox-body">
       <div class="lightbox-meta">
         <span class="lightbox-caption" id="lbCaption"></span>
-        <span class="mono lightbox-fstop">f/2.8</span>
+        <span class="mono lightbox-fstop" id="lbTeknik"></span>
       </div>
       <p class="lightbox-desc" id="lbDesc"></p>
       <div class="like-row">
@@ -543,6 +561,12 @@
 <script>
 (function(){
   "use strict";
+
+  // fotoğrafların kolayca sürükleyip kaydedilmesini zorlaştırmak için
+  // (not: bu bir kilit değil, sadece caydırıcıdır — ekran görüntüsü her zaman mümkündür)
+  document.addEventListener('dragstart', function(e){
+    if(e.target && e.target.tagName === 'IMG') e.preventDefault();
+  });
 
   // sprocket strips
   function fillSprockets(el, count){
@@ -647,18 +671,153 @@
   // gallery data: frame number, grup (kategori), kısa alt yazı, uzun açıklama (sonra doldurulacak)
   var PLACEHOLDER_DESC = 'Bu fotoğrafın hikâyesini birkaç cümleyle buraya ekleyeceğiz — nerede, ne zaman ve neden çekildiğini anlatan kısa bir not.';
   var FRAMES = [
-    {n:'003', cat:'istanbul',        label:'İstanbul',        cap:'Karaköy, sabah 07:14'},
-    {n:'007', cat:'doga',            label:'Doğa',             cap:'Belgrad Ormanı, sonbahar'},
-    {n:'009', cat:'sokak',           label:'Sokak',            cap:'Beyoğlu, akşam 19:40'},
-    {n:'011', cat:'detay',           label:'Detay',            cap:'Balıkçı teknesi, halat'},
-    {n:'014', cat:'insan',           label:'İnsan',            cap:'Atölyede, pencere ışığı'},
-    {n:'016', cat:'sevimli-dostlar', label:'Sevimli Dostlar',  cap:"Balat'ta bir sokak kedisi"},
-    {n:'017', cat:'sokak',           label:'Sokak',            cap:'Eminönü, öğle vapuru'},
-    {n:'019', cat:'doga',            label:'Doğa',             cap:'Kilyos sahili, dalga'},
-    {n:'021', cat:'istanbul',        label:'İstanbul',         cap:'Çamlıca tepesi, sis'},
-    {n:'025', cat:'detay',           label:'Detay',            cap:'Simit arabası, tel'},
-    {n:'028', cat:'insan',           label:'İnsan',            cap:'Vapurda, sabah yolcusu'},
-    {n:'030', cat:'sevimli-dostlar', label:'Sevimli Dostlar',  cap:"Kumkapı'da bir martı"}
+    {n:'001', cat:'detay', label:'Detay', cap:'Taş Ev - Balıkesir 2016', teknik:'f/3,5, 1/2500sn, ISO-100', photo:'fotograflar/detay/detay-01.jpg'},
+    {n:'002', cat:'detay', label:'Detay', cap:'Heykel - Balıkesir 2016', teknik:'f/4,5, 1/100sn, ISO-100', photo:'fotograflar/detay/detay-02.jpg'},
+    {n:'003', cat:'detay', label:'Detay', cap:'Cunda Sokakları - Balıkesir 2016', teknik:'f/4,5, 1/400sn, ISO-100', photo:'fotograflar/detay/detay-03.jpg'},
+    {n:'004', cat:'detay', label:'Detay', cap:'Yıpranmış Ahşap Panjur - Balıkesir 2016', teknik:'f/5, 1/320sn, ISO-200', photo:'fotograflar/detay/detay-04.jpg'},
+    {n:'005', cat:'detay', label:'Detay', cap:'Eski Taş Ev - Balıkesir 2016', teknik:'f/10, 1/100sn, ISO-200', photo:'fotograflar/detay/detay-05.jpg'},
+    {n:'006', cat:'detay', label:'Detay', cap:'Kurumuş Mısır - Bolu 2017', teknik:'f/4,8, 1/500sn, ISO-100', photo:'fotograflar/detay/detay-06.jpg'},
+    {n:'007', cat:'detay', label:'Detay', cap:'Amasra Tarihi Ev - Bartom 2017', teknik:'f/5, 1/100sn, ISO-640', photo:'fotograflar/detay/detay-07.jpg'},
+    {n:'008', cat:'detay', label:'Detay', cap:'Sarışın Ev - Almanya 2017', teknik:'f/4,2, 1/200sn, ISO-200', photo:'fotograflar/detay/detay-08.jpg'},
+    {n:'009', cat:'detay', label:'Detay', cap:'Avusturya\'da Sıradan Bisiklet Yolu - Avusturya 2017', teknik:'f/5, 1/50sn, ISO-200', photo:'fotograflar/detay/detay-09.jpg'},
+    {n:'010', cat:'detay', label:'Detay', cap:'Hediyelik Eşya Dükkanı - Nevşehir 2017', teknik:'f/4,2, 1/500sn, ISO-100', photo:'fotograflar/detay/detay-10.jpg'},
+    {n:'011', cat:'detay', label:'Detay', cap:'Saat Kulesi - Almanya 2017', teknik:'f/4,8, 1/2000sn, ISO-200', photo:'fotograflar/detay/detay-11.jpg'},
+    {n:'012', cat:'detay', label:'Detay', cap:'Kapı Dışı Kalmış Tv - Nevşehir 2016', teknik:'f/4, 1/60sn, ISO-125', photo:'fotograflar/detay/detay-12.jpg'},
+    {n:'013', cat:'detay', label:'Detay', cap:'Hediyelik Eşya Dükkanı - Almanya 2017', teknik:'f/5,3, 1/200sn, ISO-200', photo:'fotograflar/detay/detay-13.jpg'},
+    {n:'014', cat:'detay', label:'Detay', cap:'Almanya Başbakanlık Binası - Almanya 2017', teknik:'f/4, 1/800sn, ISO-200', photo:'fotograflar/detay/detay-14.jpg'},
+    {n:'015', cat:'detay', label:'Detay', cap:'Tarihi Diana Tapınağı - Almanya 2017', teknik:'f/4,5 1/1250sn, ISO-200', photo:'fotograflar/detay/detay-15.jpg'},
+    {n:'016', cat:'detay', label:'Detay', cap:'Çıkış Yazısı - Amasra', teknik:'f/11, 1/500sn, ISO-360', photo:'fotograflar/detay/detay-16.jpg'},
+    {n:'017', cat:'detay', label:'Detay', cap:'Ağaç Oyukları - Bolu 2019', teknik:'f/8, 1/60 sn, ISO-400', photo:'fotograflar/detay/detay-17.jpg'},
+    {n:'018', cat:'detay', label:'Detay', cap:'Damla Tanesi - Bursa 2019', teknik:'f/10, 1/250 sn, ISO-400', photo:'fotograflar/detay/detay-18.jpg'},
+    {n:'019', cat:'detay', label:'Detay', cap:'Buz Sarkıtı - Konya 2017', teknik:'f/8, 1/100 sn, ISO-100', photo:'fotograflar/detay/detay-19.jpg'},
+    {n:'020', cat:'detay', label:'Detay', cap:'Asma Kilit - Balıkesir 2022', teknik:'f/8, 1/60 sn, ISO-200', photo:'fotograflar/detay/detay-20.jpg'},
+    {n:'021', cat:'detay', label:'Detay', cap:'Seyyar Lamba - İstanbul 2016', teknik:'f/5,3, 1/160 sn, ISO-640', photo:'fotograflar/detay/detay-21.jpg'},
+    {n:'022', cat:'detay', label:'Detay', cap:'Kiremitli Çatı - İstanbul 2019', teknik:'f/5,6, 1/125 sn, ISO-500', photo:'fotograflar/detay/detay-22.jpg'},
+    {n:'023', cat:'detay', label:'Detay', cap:'Beyoğlu Evleri - İstanbul 2017', teknik:'f/4, 1/80, ISO-800', photo:'fotograflar/detay/detay-23.jpg'},
+    {n:'024', cat:'doga', label:'Doğa', cap:'Enginar Çiçeği - Kastamonu 2017', teknik:'f/6,3, 1/30sn, ISO-1600', photo:'fotograflar/doga/doga-01.jpg'},
+    {n:'025', cat:'doga', label:'Doğa', cap:'Orman Yolu - Bolu 2019', teknik:'f/9, 1/100sn, ISO-400', photo:'fotograflar/doga/doga-02.jpg'},
+    {n:'026', cat:'doga', label:'Doğa', cap:'Yayla - Bolu 2019', teknik:'f/4,5 1/200sn, ISO-125', photo:'fotograflar/doga/doga-03.jpg'},
+    {n:'027', cat:'doga', label:'Doğa', cap:'Arboretrum - İstanbul 2018', teknik:'f/8, 1/60sn, ISO-400', photo:'fotograflar/doga/doga-04.jpg'},
+    {n:'028', cat:'doga', label:'Doğa', cap:'Ömrü Biten Çiçek - Balıkesir 2017', teknik:'f/8, 1/500sn, ISO-200', photo:'fotograflar/doga/doga-05.jpg'},
+    {n:'029', cat:'doga', label:'Doğa', cap:'Gün Doğumu - Nevşehir 2017', teknik:'f/7,1, 1/400sn, ISO-200', photo:'fotograflar/doga/doga-06.jpg'},
+    {n:'030', cat:'doga', label:'Doğa', cap:'Balon Seyri - Nevşehir 2017', teknik:'f/10, 1/1600, ISO-200', photo:'fotograflar/doga/doga-07.jpg'},
+    {n:'031', cat:'doga', label:'Doğa', cap:'Kaktüs Pazarı - İstanbul 2016', teknik:'f/5,6, 1/640sn, ISO-100', photo:'fotograflar/doga/doga-08.jpg'},
+    {n:'032', cat:'doga', label:'Doğa', cap:'Göl Papatyası - Bursa 2016', teknik:'f/10, 1/400sn, ISO-100', photo:'fotograflar/doga/doga-09.jpg'},
+    {n:'033', cat:'doga', label:'Doğa', cap:'İskele - Bursa 2016', teknik:'f/10, 1/400sn, ISO-100', photo:'fotograflar/doga/doga-10.jpg'},
+    {n:'034', cat:'doga', label:'Doğa', cap:'Lale Festivali - İstanbul 2018', teknik:'f/8, 1/250sn, ISO-400', photo:'fotograflar/doga/doga-11.jpg'},
+    {n:'035', cat:'doga', label:'Doğa', cap:'Laleler ve Sümbüller - İstanbul 2018', teknik:'f/8, 1/60sn, ISO-400', photo:'fotograflar/doga/doga-12.jpg'},
+    {n:'036', cat:'doga', label:'Doğa', cap:'Kırmızı Laleler - İstanbul 2018', teknik:'f/8, 1/250sn, ISO-320', photo:'fotograflar/doga/doga-13.jpg'},
+    {n:'037', cat:'doga', label:'Doğa', cap:'Renkli Laleler - İstanbul 2018', teknik:'f/5,6, 1/800sn, ISO-200', photo:'fotograflar/doga/doga-14.jpg'},
+    {n:'038', cat:'doga', label:'Doğa', cap:'Sarı Laleler - İstanbul 2018', teknik:'f/5,6, 1/1000sn, ISO-200', photo:'fotograflar/doga/doga-15.jpg'},
+    {n:'039', cat:'doga', label:'Doğa', cap:'Sünnet Gölü - Bolu 2019', teknik:'f/5,6, 1/1000sn, ISO-2000', photo:'fotograflar/doga/doga-16.jpg'},
+    {n:'040', cat:'insan', label:'İnsan', cap:'Balıkçı Amcalar - İstanbul 2022', teknik:'f/10, 1/400sn, ISO-400', photo:'fotograflar/insan/insan-01.jpg'},
+    {n:'041', cat:'insan', label:'İnsan', cap:'Yağmur Mağdurları - İstanbul 2022', teknik:'f/5,6, 1/500sn, ISO-250', photo:'fotograflar/insan/insan-02.jpg'},
+    {n:'042', cat:'insan', label:'İnsan', cap:'Trafikten Kaçanlardan - İstanbul 2022', teknik:'f/5,6, 1/320sn, ISO-250', photo:'fotograflar/insan/insan-03.jpg'},
+    {n:'043', cat:'insan', label:'İnsan', cap:'Şemsiyenin Rengi - İstanbul 2022', teknik:'f/5,6, 1/200sn, ISO-250', photo:'fotograflar/insan/insan-04.jpg'},
+    {n:'044', cat:'insan', label:'İnsan', cap:'Efkarlı Kurye - İstanbul 2022', teknik:'f/5,6, 1/320 sn, ISO-400', photo:'fotograflar/insan/insan-05.jpg'},
+    {n:'045', cat:'insan', label:'İnsan', cap:'Kestaneci - İstanbul 2022', teknik:'f/5,6, 1/320 sn, ISO-400', photo:'fotograflar/insan/insan-06.jpg'},
+    {n:'046', cat:'insan', label:'İnsan', cap:'Vatman - İstanbul 2022', teknik:'f/5,6, 1/1000sn, ISO-400', photo:'fotograflar/insan/insan-07.jpg'},
+    {n:'047', cat:'insan', label:'İnsan', cap:'Pandemi Zamanı - İstanbul 2022', teknik:'f/5,6, 1/100sn, ISO-400', photo:'fotograflar/insan/insan-08.jpg'},
+    {n:'048', cat:'insan', label:'İnsan', cap:'Pandemi Zamanı - İstanbul 2022', teknik:'f/5,6, 1/320 sn, ISO-400', photo:'fotograflar/insan/insan-09.jpg'},
+    {n:'049', cat:'insan', label:'İnsan', cap:'Oltaya Zamanı - İstanbul 2016', teknik:'f/4,2, 1/3200sn, ISO-200', photo:'fotograflar/insan/insan-10.jpg'},
+    {n:'050', cat:'insan', label:'İnsan', cap:'Pandemi Zamanı - İstanbul 2022', teknik:'f/5,6, 1/320sn, ISO-400', photo:'fotograflar/insan/insan-11.jpg'},
+    {n:'051', cat:'insan', label:'İnsan', cap:'Pandemi Zamanı - İstanbul 2022', teknik:'f/5,6, 1/320sn, ISO-125', photo:'fotograflar/insan/insan-12.jpg'},
+    {n:'052', cat:'insan', label:'İnsan', cap:'Mutlu Balıkçı - İstanbul 2018', teknik:'f/7,1, 1/250sn, ISO-160', photo:'fotograflar/insan/insan-13.jpg'},
+    {n:'053', cat:'insan', label:'İnsan', cap:'Oltaya Geldi - İstanbul 2018', teknik:'f/7,1, 1/250sn, ISO-160', photo:'fotograflar/insan/insan-14.jpg'},
+    {n:'054', cat:'insan', label:'İnsan', cap:'Kuşlara Fısıldayan Amca - İstanbul 2016', teknik:'f/5, 1/1250sn, ISO-400', photo:'fotograflar/insan/insan-15.jpg'},
+    {n:'055', cat:'insan', label:'İnsan', cap:'Ayasofya Camine Açılan Kapı - İstanbul 2019', teknik:'f/5,6, 1/100sn, ISO-200', photo:'fotograflar/insan/insan-16.jpg'},
+    {n:'056', cat:'insan', label:'İnsan', cap:'Rastgele - İstanbul 2018', teknik:'f/5,3, 1/60sn, ISO-1100', photo:'fotograflar/insan/insan-17.jpg'},
+    {n:'057', cat:'insan', label:'İnsan', cap:'Simitçi Amca - İstanbul 2018', teknik:'f/5,6, 1/500sn, ISO-100', photo:'fotograflar/insan/insan-18.jpg'},
+    {n:'058', cat:'insan', label:'İnsan', cap:'Çocuk Merakı - Balıkesir 2017', teknik:'f/5,3, 1/200sn, ISO-100', photo:'fotograflar/insan/insan-19.jpg'},
+    {n:'059', cat:'insan', label:'İnsan', cap:'Bir Grup Şaşkın - Almanya 2017', teknik:'f/4,8, 1/400sn, ISO-200', photo:'fotograflar/insan/insan-20.jpg'},
+    {n:'060', cat:'insan', label:'İnsan', cap:'El Emeği Göz Nuru - Amasya 2018', teknik:'f/8, 1/60sn, ISO-100', photo:'fotograflar/insan/insan-21.jpg'},
+    {n:'061', cat:'insan', label:'İnsan', cap:'Gün Batımı - Balıkesir 2018', teknik:'f/8, 1/640sn, ISO-200', photo:'fotograflar/insan/insan-22.jpg'},
+    {n:'062', cat:'istanbul', label:'İstanbul', cap:'Tatlı Tosbağa - İstanbul 2017', teknik:'f/4,5 1/8sn, ISO-100', photo:'fotograflar/istanbul/istanbul-01.jpg'},
+    {n:'063', cat:'istanbul', label:'İstanbul', cap:'Ortaköy Camii - İstanbul 2022', teknik:'f/3,5, 1/1250sn, ISO-125', photo:'fotograflar/istanbul/istanbul-02.jpg'},
+    {n:'064', cat:'istanbul', label:'İstanbul', cap:'Kadıköy Deniz Feneri - İstanbul 2021', teknik:'f/5,3, 1/160sn, ISO-100', photo:'fotograflar/istanbul/istanbul-03.jpg'},
+    {n:'065', cat:'istanbul', label:'İstanbul', cap:'Fener Rum Lisesi Öğrencisi - İstanbul 2017', teknik:'f/9, 1/125sn, ISO-400', photo:'fotograflar/istanbul/istanbul-04.jpg'},
+    {n:'066', cat:'istanbul', label:'İstanbul', cap:'Galata ve İstanbul - İstanbul 2018', teknik:'f/5, 1/4000sn, ISO-640', photo:'fotograflar/istanbul/istanbul-05.jpg'},
+    {n:'067', cat:'istanbul', label:'İstanbul', cap:'Balat Sokakları - İstanbul 2017', teknik:'f7,1, 1/30sn, ISO-900', photo:'fotograflar/istanbul/istanbul-06.jpg'},
+    {n:'068', cat:'istanbul', label:'İstanbul', cap:'Balat Sokakları2 - İstanbul 2017', teknik:'f7,1, 1/30sn, ISO-900', photo:'fotograflar/istanbul/istanbul-07.jpg'},
+    {n:'069', cat:'istanbul', label:'İstanbul', cap:'Haydarpaşa Tren Garı - İstanbul 2016', teknik:'f/7,1, 1/200sn, ISO-125', photo:'fotograflar/istanbul/istanbul-08.jpg'},
+    {n:'070', cat:'istanbul', label:'İstanbul', cap:'Sultanahmet\'ten Ayasofya\'ya - İstanbul 2018', teknik:'f/10, 1/200sn, ISO-400', photo:'fotograflar/istanbul/istanbul-09.jpg'},
+    {n:'071', cat:'istanbul', label:'İstanbul', cap:'Vapur Sefası - İstanbul 2016', teknik:'f/5,6, 1/2000sn, ISO-640', photo:'fotograflar/istanbul/istanbul-10.jpg'},
+    {n:'072', cat:'istanbul', label:'İstanbul', cap:'Beylerbeyi Sarayı Deniz Kapısı - İstanbul 2019', teknik:'f/10, 1/400sn, ISO-200', photo:'fotograflar/istanbul/istanbul-11.jpg'},
+    {n:'073', cat:'istanbul', label:'İstanbul', cap:'Kız Kulesi - İstanbul 2016', teknik:'f/6,3, 1/250sn, ISO-200', photo:'fotograflar/istanbul/istanbul-12.jpg'},
+    {n:'074', cat:'istanbul', label:'İstanbul', cap:'Kadıköyden Bir Bakış - İstanbul 2017', teknik:'f/6,3, 1/400sn, ISO-400', photo:'fotograflar/istanbul/istanbul-13.jpg'},
+    {n:'075', cat:'istanbul', label:'İstanbul', cap:'Martı Gösterisi - İstanbul 2017', teknik:'f/7,1, 1/400sn, ISO-400', photo:'fotograflar/istanbul/istanbul-14.jpg'},
+    {n:'076', cat:'istanbul', label:'İstanbul', cap:'Eminönü Vapuru - İstanbul 2023', teknik:'f/5,3, 1/250sn, ISO-320', photo:'fotograflar/istanbul/istanbul-15.jpg'},
+    {n:'077', cat:'istanbul', label:'İstanbul', cap:'İstanbul Manzarası - İstanbul 2019', teknik:'f/11, 1/500sn, ISO-400', photo:'fotograflar/istanbul/istanbul-16.jpg'},
+    {n:'078', cat:'istanbul', label:'İstanbul', cap:'Martılardan Potpori - İstanbul 2017', teknik:'f/5,6, 1/1250sn, ISO-1000', photo:'fotograflar/istanbul/istanbul-17.jpg'},
+    {n:'079', cat:'istanbul', label:'İstanbul', cap:'Galata x (Kule+Köprü) - İstanbul 2022', teknik:'f/5,6, 1/320sn, ISO-250', photo:'fotograflar/istanbul/istanbul-18.jpg'},
+    {n:'080', cat:'istanbul', label:'İstanbul', cap:'Çengelköy\'de Tatlı Bir Ev - İstanbul 2016', teknik:'f/5, 1/1250sn, ISO-640', photo:'fotograflar/istanbul/istanbul-19.jpg'},
+    {n:'081', cat:'istanbul', label:'İstanbul', cap:'Yük Gemisi Silüeti - İstanbul 2017', teknik:'f/11, 1/800sn, ISO-200', photo:'fotograflar/istanbul/istanbul-20.jpg'},
+    {n:'082', cat:'istanbul', label:'İstanbul', cap:'Balat\'ın Renkli Evleri - İstanbul 2016', teknik:'f/10, 1/320sn, ISO-400', photo:'fotograflar/istanbul/istanbul-21.jpg'},
+    {n:'083', cat:'istanbul', label:'İstanbul', cap:'Balat\'tan Bir Kesit - İstanbul 2016', teknik:'f/9, 1/320sn, ISO-125', photo:'fotograflar/istanbul/istanbul-22.jpg'},
+    {n:'084', cat:'istanbul', label:'İstanbul', cap:'Boğaz\'daki Ekmek Teknesi - İstanbul 2016', teknik:'f/5,6, 1/2000sn, ISO-640', photo:'fotograflar/istanbul/istanbul-23.jpg'},
+    {n:'085', cat:'istanbul', label:'İstanbul', cap:'Dinlenen Vapur - İstanbul 2017', teknik:'f/8, 1/60sn, ISO-400', photo:'fotograflar/istanbul/istanbul-24.jpg'},
+    {n:'086', cat:'istanbul', label:'İstanbul', cap:'Sultanahmet Ayasofya Yolu - İstanbul 2017', teknik:'f/5,6, 1/1000sn, ISO-1000', photo:'fotograflar/istanbul/istanbul-25.jpg'},
+    {n:'087', cat:'istanbul', label:'İstanbul', cap:'Galata Kules ve Sarmaşıklar - İstanbul 2018', teknik:'f/5,6, 1/200sn, ISO-100', photo:'fotograflar/istanbul/istanbul-26.jpg'},
+    {n:'088', cat:'istanbul', label:'İstanbul', cap:'Eminönü Balıkçıları - İstanbul 2016', teknik:'f/5, 1/1600sn, ISO-2000', photo:'fotograflar/istanbul/istanbul-27.jpg'},
+    {n:'089', cat:'istanbul', label:'İstanbul', cap:'Eminönü\'den Karaköy\'e - İstanbul 2016', teknik:'f/5,3, 1/640sn, ISO-100', photo:'fotograflar/istanbul/istanbul-28.jpg'},
+    {n:'090', cat:'istanbul', label:'İstanbul', cap:'Süleymaniye\'de İkindi Vakti - İstanbul 2016', teknik:'f/3,5, 1/320sn, ISO-100', photo:'fotograflar/istanbul/istanbul-29.jpg'},
+    {n:'091', cat:'istanbul', label:'İstanbul', cap:'Süleymaniye Avlusu Kubbeleri - İstanbul 2017', teknik:'f/11, 1/400sn, ISO-400', photo:'fotograflar/istanbul/istanbul-30.jpg'},
+    {n:'092', cat:'istanbul', label:'İstanbul', cap:'Minare - İstanbul 2017', teknik:'f/9, 1/125sn, ISO-400', photo:'fotograflar/istanbul/istanbul-31.jpg'},
+    {n:'093', cat:'istanbul', label:'İstanbul', cap:'Balat Sokakları - İstanbul 2017', teknik:'f/9, 1/125sn, ISO-400', photo:'fotograflar/istanbul/istanbul-32.jpg'},
+    {n:'094', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Poz Veren Arı - İstanbul 2019', teknik:'f/5,6, 1/320sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-01.jpg'},
+    {n:'095', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Çalışkan Arı - İstanbul 2019', teknik:'f/4, 1/640sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-02.jpg'},
+    {n:'096', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Meraklı Güvercin - İstanbul 2016', teknik:'f/5,6, 1/400sn, ISO-125', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-03.jpg'},
+    {n:'097', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Serçe Kahvaltısı - İstanbul 2016', teknik:'f/5,6, 1/80sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-04.jpg'},
+    {n:'098', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Kızgın Martı - İstanbul 2022', teknik:'f/11, 1/400sn, ISO-800', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-05.jpg'},
+    {n:'099', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Delikanlı Mahalle Kedisi - İstanbul 2017', teknik:'f/7,1, 1/30sn, ISO-720', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-06.jpg'},
+    {n:'100', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'İftiraya Maruz Kalan Martı - İstanbul 2016', teknik:'f/5,6, 1/125sn, ISO-125', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-07.jpg'},
+    {n:'101', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'4 Kanatlı Martı - İstanbul 2016', teknik:'f/5, 1/1000sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-08.jpg'},
+    {n:'102', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'2 Kanatlı Martılar - İstanbul 2016', teknik:'f/5, 1/1000sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-09.jpg'},
+    {n:'103', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Güvercin Maması - İstanbul 2022', teknik:'f/5,6, 1/125sn, ISO-125', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-10.jpg'},
+    {n:'104', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Yaşlı Köpekçik - İstanbul 2022', teknik:'f/5, 1/320sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-11.jpg'},
+    {n:'105', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Akşam Menüsü - İstanbul 2022', teknik:'f/5, 1/125sn, ISO-125', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-12.jpg'},
+    {n:'106', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'İstanbul Kanatları Altında - İstanbul 2016', teknik:'f/5,6, 1/1000sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-13.jpg'},
+    {n:'107', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Yusufçuk 1 -İstanbul 2019', teknik:'f/3,5, 1/4000sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-14.jpg'},
+    {n:'108', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Yusufçuk 2 -İstanbul 2019', teknik:'f/8, 1/640sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-15.jpg'},
+    {n:'109', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Yusufçuk 3 -İstanbul 2019', teknik:'f/8, 1/320sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-16.jpg'},
+    {n:'110', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Sevilmeyen Sinek - İstanbul 2019', teknik:'f/9, 1/160sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-17.jpg'},
+    {n:'111', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Serçenin Sultanahmet Ziyareti - İstanbul 2018', teknik:'f/5,6, 1/500sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-18.jpg'},
+    {n:'112', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Süzülen Çığlık - İstanbul 2016', teknik:'f/6,3, 1/2500sn, ISO-640', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-19.jpg'},
+    {n:'113', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Saldırmaya Hazırlanan Martı - İstanbul 2016', teknik:'f/6,3, 1/2500sn, ISO-640', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-20.jpg'},
+    {n:'114', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Uyanamamış Kedi - İstanbul 2016', teknik:'f/5,3, 1/800sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-21.jpg'},
+    {n:'115', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Obur Pisicik - İstanbul 2016', teknik:'f/5, 1/320sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-22.jpg'},
+    {n:'116', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Martı Huzuru - İstanbul 2016', teknik:'f/6,3, 1/640sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-23.jpg'},
+    {n:'117', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Kargaların Molası - İstanbul 2017', teknik:'f/6,3, 1/40sn, ISO-125', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-24.jpg'},
+    {n:'118', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Şaşkın Güvercin - İstanbul 2016', teknik:'f/5,6, 1/2000sn, ISO-640', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-25.jpg'},
+    {n:'119', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Yakalanmış Balık - İstanbul 2016', teknik:'f/5,6, 1/400sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-26.jpg'},
+    {n:'120', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Mesaj Veren At - İstanbul 2016', teknik:'f/5,6, 1/100sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-27.jpg'},
+    {n:'121', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Miskinimsi Kedi - İstanbul 2016', teknik:'f/3,8, 1/30sn, ISO-125', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-28.jpg'},
+    {n:'122', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Scooter Bağımlısı Kedi - İstanbul 2022', teknik:'f/6,3, 1/160sm, ISO-125', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-29.jpg'},
+    {n:'123', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Fenerbahçeli Kedi - İstanbul 2016', teknik:'f/4,5, 1/250sn, ISO-3200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-30.jpg'},
+    {n:'124', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Göçebe Salyangoz - İstanbul 2016', teknik:'f/8, 1/125sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-31.jpg'},
+    {n:'125', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Banyo Yapan Güvercin - Nevşehir 2017', teknik:'f/8, 1/500sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-32.jpg'},
+    {n:'126', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Peri Bacacıkları ve Güvercin - Nevşehir 2017', teknik:'f/5,6, 1/640sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-33.jpg'},
+    {n:'127', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Nöbetçi Serçeler - İstanbul 2017', teknik:'f/5,6, 1/1000sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-34.jpg'},
+    {n:'128', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Seher Vakti Nöbeti - İstanbul 2017', teknik:'f/5,6, 1/1000sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-35.jpg'},
+    {n:'129', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Balıkçı Güzellemesi - İstanbul 2018', teknik:'f/9, 1/250sn, ISO-160', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-36.jpg'},
+    {n:'130', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Güvercin Mafyası - İstanbul 2018', teknik:'f/8, 1/250sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-37.jpg'},
+    {n:'131', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Güvervinaşk - İstanbul 2016', teknik:'f/5,3, 1/1250sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-38.jpg'},
+    {n:'132', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Tatliş Pisicikler - Konya 2016', teknik:'f/5,6, 1/15sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-39.jpg'},
+    {n:'133', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Mahkum Deve - Dubai 2017', teknik:'f/5,6, 1/250sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-40.jpg'},
+    {n:'134', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Masup Köpekçik - Balıkesir 2016', teknik:'f/7,1, 1/640sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-41.jpg'},
+    {n:'135', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Güneşlenen Martı - İstanbul 2019', teknik:'f/7,1, 1/3200sn, ISO-500', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-42.jpg'},
+    {n:'136', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Güneşlenen Ördek - Nevşehir 2017', teknik:'f/5, 1/2500sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-43.jpg'},
+    {n:'137', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Martı Beslemece - İstanbul 2019', teknik:'f/5,6 1/2500sn, ISO-500', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-44.jpg'},
+    {n:'138', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Umursamayanlardan - İstanbul 2019', teknik:'f/8, 1/320sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-45.jpg'},
+    {n:'139', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Günün Kazananı - İstanbul 2016', teknik:'f/5,6, 1/200sn, ISO-800', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-46.jpg'},
+    {n:'140', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Meraklı ve Sabırsız Kedicik - İstanbul 2016', teknik:'f/5, 1/100sn, ISO-640', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-47.jpg'},
+    {n:'141', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Kaplumbağa Krallığı - İstanbul 2019', teknik:'f/6,3, 1/640sn, ISO-640', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-48.jpg'},
+    {n:'142', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Yıllanmış Kedi - İstanbul 2017', teknik:'f/4,8, 1/800sn, ISO-100', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-49.jpg'},
+    {n:'143', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Küstürülenlerden - İstanbul 2018', teknik:'f/5,6, 1/800sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-50.jpg'},
+    {n:'144', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Küçük Kurbağa - İstanbul 2019', teknik:'f/8, 1/640sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-51.jpg'},
+    {n:'145', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Başyapıt - İstanbul 2019', teknik:'f/10, 1/30sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-52.jpg'},
+    {n:'146', cat:'sokak', label:'Sokak', cap:'Beyoğlu, akşam 19:40'},
+    {n:'147', cat:'sokak', label:'Sokak', cap:'Eminönü, öğle vapuru'}
   ];
 
   var grid = document.getElementById('grid');
@@ -674,8 +833,19 @@
     trigger.className = 'frame-art';
     trigger.setAttribute('aria-label', f.label + ' — ' + f.cap + ' — büyütmek için tıkla');
 
-    var canvas = document.createElement('canvas');
-    trigger.appendChild(canvas);
+    var media;
+    if(f.photo){
+      media = document.createElement('img');
+      media.src = f.photo;
+      media.alt = f.label + ' — ' + f.cap;
+      media.loading = 'lazy';
+      media.decoding = 'async';
+      media.draggable = false;
+      media.oncontextmenu = function(){ return false; };
+    } else {
+      media = document.createElement('canvas');
+    }
+    trigger.appendChild(media);
 
     var no = document.createElement('span');
     no.className = 'frame-no mono';
@@ -695,22 +865,27 @@
     var capText = document.createElement('span');
     capText.className = 'cap';
     capText.textContent = f.cap;
-    var timeText = document.createElement('span');
-    timeText.className = 't mono';
-    timeText.textContent = 'f/2.8';
     figcap.appendChild(capText);
-    figcap.appendChild(timeText);
-
-    var desc = document.createElement('p');
-    desc.className = 'frame-desc';
-    desc.textContent = PLACEHOLDER_DESC;
+    if(f.teknik){
+      var teknikText = document.createElement('span');
+      teknikText.className = 't mono';
+      teknikText.textContent = f.teknik;
+      figcap.appendChild(teknikText);
+    }
 
     fig.appendChild(trigger);
     fig.appendChild(figcap);
-    fig.appendChild(desc);
+    if(!f.photo){
+      var desc = document.createElement('p');
+      desc.className = 'frame-desc';
+      desc.textContent = f.desc || PLACEHOLDER_DESC;
+      fig.appendChild(desc);
+    }
     frag.appendChild(fig);
 
-    requestAnimationFrame(function(){ paintFrame(canvas, seed); });
+    if(!f.photo){
+      requestAnimationFrame(function(){ paintFrame(media, seed); });
+    }
   });
   grid.appendChild(frag);
 
@@ -730,9 +905,11 @@
   // ---- lightbox ----
   var lightbox = document.getElementById('lightbox');
   var lbCanvas = document.getElementById('lbCanvas');
+  var lbImg = document.getElementById('lbImg');
   var lbNo = document.getElementById('lbNo');
   var lbCat = document.getElementById('lbCat');
   var lbCaption = document.getElementById('lbCaption');
+  var lbTeknik = document.getElementById('lbTeknik');
   var lbDesc = document.getElementById('lbDesc');
   var lbLikeBtn = document.getElementById('lbLikeBtn');
   var lbLikeCount = document.getElementById('lbLikeCount');
@@ -788,10 +965,30 @@
     lbNo.textContent = 'N° ' + f.n;
     lbCat.textContent = f.label;
     lbCaption.textContent = f.cap;
-    lbDesc.textContent = PLACEHOLDER_DESC;
+    if(f.teknik){
+      lbTeknik.textContent = f.teknik;
+      lbTeknik.hidden = false;
+    } else {
+      lbTeknik.textContent = '';
+      lbTeknik.hidden = true;
+    }
+    var descText = f.desc || (f.photo ? '' : PLACEHOLDER_DESC);
+    lbDesc.textContent = descText;
+    lbDesc.hidden = !descText;
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
-    requestAnimationFrame(function(){ paintFrame(lbCanvas, seed); });
+    if(f.photo){
+      lbImg.src = f.photo;
+      lbImg.alt = f.label + ' — ' + f.cap;
+      lbImg.draggable = false;
+      lbImg.oncontextmenu = function(){ return false; };
+      lbImg.hidden = false;
+      lbCanvas.hidden = true;
+    } else {
+      lbCanvas.hidden = false;
+      lbImg.hidden = true;
+      requestAnimationFrame(function(){ paintFrame(lbCanvas, seed); });
+    }
 
     var term = 'foto-' + f.n;
     lbLikeBtn.dataset.term = term;
