@@ -17,39 +17,11 @@
     --frame-shadow: 0 1px 0 rgba(38,40,42,0.06);
     --overlay: rgba(20,20,18,0.6);
   }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --paper:#17191A;
-      --paper-2:#1E211F;
-      --ink:#E7E6E0;
-      --ink-soft:#C7C5BB;
-      --muted:#93968D;
-      --line:#33362F;
-      --accent:#2CA79D;
-      --accent-ink:#B8ECE6;
-      --amber:#E8933E;
-      --amber-soft:#3A2E1C;
-      --frame-shadow: 0 1px 0 rgba(0,0,0,0.3);
-      --overlay: rgba(0,0,0,0.72);
-    }
-  }
-  :root[data-theme="dark"]{
-    --paper:#17191A;
-    --paper-2:#1E211F;
-    --ink:#E7E6E0;
-    --ink-soft:#C7C5BB;
-    --muted:#93968D;
-    --line:#33362F;
-    --accent:#2CA79D;
-    --accent-ink:#B8ECE6;
-    --amber:#E8933E;
-    --amber-soft:#3A2E1C;
-    --frame-shadow: 0 1px 0 rgba(0,0,0,0.3);
-    --overlay: rgba(0,0,0,0.72);
-  }
+  /* Not: site kasıtlı olarak her zaman açık (light) temada kalır — ziyaretçinin
+     cihazı karanlık modda olsa bile arka plan koyuya dönmez. */
 
   *{box-sizing:border-box;}
-  html{color-scheme:light dark;}
+  html{color-scheme:light;}
   body{
     margin:0;
     background:var(--paper);
