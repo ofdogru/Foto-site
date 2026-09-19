@@ -220,9 +220,14 @@
     user-select:none;
     -webkit-user-drag:none;
     pointer-events:none;
-    transition:transform .5s ease;
+    transition:transform .5s ease, filter .5s ease;
   }
   button.cat-tile:hover img{transform:scale(1.04);}
+  @media (hover:hover){
+    .cat-tile img{filter:grayscale(0.9) saturate(0.55) brightness(0.96);}
+    button.cat-tile:hover img,
+    button.cat-tile:focus-visible img{filter:grayscale(0) saturate(1) brightness(1);}
+  }
   .cat-tile-overlay{
     position:absolute;
     inset:0;
