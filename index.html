@@ -396,7 +396,9 @@
   .lightbox-backdrop{
     position:absolute;
     inset:0;
-    background:var(--overlay);
+    background:rgba(251,251,249,0.86);
+    -webkit-backdrop-filter:blur(22px) saturate(1.05);
+    backdrop-filter:blur(22px) saturate(1.05);
     border:0;
     padding:0;
     margin:0;
@@ -405,66 +407,109 @@
   .lightbox-panel{
     position:relative;
     z-index:1;
-    width:min(1500px, 96vw);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    max-width:96vw;
     max-height:calc(100vh - 32px);
     overflow-y:auto;
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:3px;
-    box-shadow:0 24px 60px rgba(0,0,0,0.35);
+    overflow-x:hidden;
   }
-  .lightbox-close{
-    position:absolute;
-    top:10px; right:10px;
-    z-index:2;
-    width:32px; height:32px;
+  .lightbox-close,
+  .lightbox-nav{
+    position:fixed;
+    z-index:3;
+    width:40px; height:40px;
     border-radius:50%;
-    border:1px solid rgba(241,239,228,0.4);
-    background:rgba(20,20,18,0.5);
-    color:#F1EFE4;
-    font-size:16px;
+    border:1px solid rgba(38,40,42,0.14);
+    background:rgba(251,251,249,0.8);
+    color:var(--ink);
+    font-size:17px;
     line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     cursor:pointer;
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
+    box-shadow:0 4px 16px rgba(20,20,18,0.12);
+    transition:background .15s ease, transform .15s ease;
   }
-  .lightbox-close:hover{background:rgba(20,20,18,0.75);}
-  .lightbox-close:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .lightbox-close:hover,
+  .lightbox-nav:hover{background:rgba(251,251,249,0.98); transform:scale(1.05);}
+  .lightbox-close:focus-visible,
+  .lightbox-nav:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .lightbox-close{top:18px; right:18px;}
+  .lightbox-nav{top:50%; transform:translateY(-50%); font-size:20px;}
+  .lightbox-nav:hover{transform:translateY(-50%) scale(1.05);}
+  .lightbox-prev{left:18px;}
+  .lightbox-next{right:18px;}
+  .lightbox-nav[hidden]{display:none;}
   .lightbox-art{
     position:relative;
-    aspect-ratio:3/2;
-    background:var(--paper-2);
+    max-width:100%;
+    line-height:0;
+    border-radius:2px;
     overflow:hidden;
+    box-shadow:0 26px 70px rgba(20,20,18,0.28);
   }
-  .lightbox-art.is-photo{
-    aspect-ratio:auto;
-    display:flex;
-    justify-content:center;
-    background:var(--paper-2);
-  }
-  .lightbox-art canvas{display:block; width:100%; height:100%;}
+  .lightbox-art canvas{display:block; width:480px; max-width:100%; height:320px;}
   .lightbox-art img{
     display:block;
     width:auto;
     height:auto;
     max-width:100%;
-    max-height:88vh;
+    max-height:78vh;
     object-fit:contain;
     -webkit-user-select:none;
     user-select:none;
     -webkit-user-drag:none;
   }
   .lightbox-art canvas[hidden], .lightbox-art img[hidden]{display:none;}
-  .lightbox-body{padding:20px 22px 26px;}
-  .lightbox-meta{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:10px;
-    margin-bottom:10px;
+  .lightbox-teknik{
+    position:absolute;
+    right:10px; bottom:10px;
+    font-size:10.5px;
+    letter-spacing:0.03em;
+    color:rgba(251,251,249,0.88);
+    background:rgba(20,20,18,0.34);
+    padding:4px 9px;
+    border-radius:3px;
+    text-shadow:0 1px 2px rgba(0,0,0,0.35);
   }
-  .lightbox-caption{font-size:15px; color:var(--ink);}
-  .lightbox-fstop{font-size:11px; color:var(--muted);}
+  .lightbox-teknik[hidden]{display:none;}
+  .lightbox-footer{
+    width:100%;
+    max-width:100%;
+    margin-top:16px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .lightbox-footer-info{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    text-align:left;
+  }
+  .lightbox-cat{
+    font-size:10px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .lightbox-caption{
+    font-family:'Instrument Serif', serif;
+    font-style:italic;
+    font-size:23px;
+    line-height:1.3;
+    color:var(--ink);
+  }
   .lightbox-desc{
-    margin:0 0 22px;
+    width:100%;
+    margin:14px 0 0;
     font-size:14.5px;
     line-height:1.65;
     color:var(--ink-soft);
@@ -476,8 +521,7 @@
     display:flex;
     align-items:center;
     gap:10px;
-    padding-top:14px;
-    border-top:1px dashed var(--line);
+    flex:0 0 auto;
   }
   .like-btn{
     appearance:none;
@@ -533,8 +577,14 @@
     .nav-btn.is-active{border-color:var(--accent);}
     .sidebar-foot{display:none;}
     .content{padding:22px 18px 50px;}
-    .lightbox{padding:0;}
-    .lightbox-panel{width:100%; max-height:100vh; border-radius:0;}
+    .lightbox{padding:10px;}
+    .lightbox-panel{max-height:100vh;}
+    .lightbox-art img{max-height:64vh;}
+    .lightbox-close{top:10px; right:10px; width:34px; height:34px; font-size:15px;}
+    .lightbox-nav{width:34px; height:34px; font-size:17px;}
+    .lightbox-prev{left:6px;}
+    .lightbox-next{right:6px;}
+    .lightbox-caption{font-size:19px;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -572,20 +622,21 @@
 
 <div class="lightbox" id="lightbox" hidden>
   <button class="lightbox-backdrop" id="lbBackdrop" aria-label="Kapat"></button>
+  <button class="lightbox-close" id="lbClose" aria-label="Kapat">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Önceki fotoğraf">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lbNext" aria-label="Sonraki fotoğraf">›</button>
   <div class="lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="lbCaption">
-    <button class="lightbox-close" id="lbClose" aria-label="Kapat">✕</button>
     <div class="lightbox-art" id="lbArt">
       <canvas id="lbCanvas"></canvas>
       <img id="lbImg" alt="" hidden>
       <span class="frame-no mono" id="lbNo"></span>
-      <span class="frame-cat" id="lbCat"></span>
+      <span class="mono lightbox-teknik" id="lbTeknik"></span>
     </div>
-    <div class="lightbox-body">
-      <div class="lightbox-meta">
+    <div class="lightbox-footer">
+      <div class="lightbox-footer-info">
+        <span class="mono lightbox-cat" id="lbCat"></span>
         <span class="lightbox-caption" id="lbCaption"></span>
-        <span class="mono lightbox-fstop" id="lbTeknik"></span>
       </div>
-      <p class="lightbox-desc" id="lbDesc"></p>
       <div class="like-row">
         <button type="button" class="like-btn" id="lbLikeBtn">
           <svg class="like-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-6.9-4.35-9.6-8.35C.7 9.6 1.1 6.1 3.9 4.3c2.3-1.5 5.2-.95 6.95 1.15L12 6.95l1.15-1.5c1.75-2.1 4.65-2.65 6.95-1.15 2.8 1.8 3.2 5.3 1.5 7.85C18.9 16.15 12 20.5 12 20.5z"/></svg>
@@ -593,6 +644,7 @@
         </button>
         <span class="like-hint">Bu kareyi beğen</span>
       </div>
+      <p class="lightbox-desc" id="lbDesc"></p>
     </div>
   </div>
 </div>
@@ -806,20 +858,26 @@
     {n:'143', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Küstürülenlerden - İstanbul 2018', teknik:'f/5,6, 1/800sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-50.jpg'},
     {n:'144', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Küçük Kurbağa - İstanbul 2019', teknik:'f/8, 1/640sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-51.jpg'},
     {n:'145', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Başyapıt - İstanbul 2019', teknik:'f/10, 1/30sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-52.jpg'},
-    {n:'146', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'İlk kare'},
-    {n:'147', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'İkinci kare'}
+    {n:'146', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Bisiklet Yolcusu - Avusturya 2022', teknik:'f/7,1, 1/100sn, ISO-1000', photo:'fotograflar/siyah-beyaz/siyah-beyaz-01.jpg'},
+    {n:'147', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Yağmurlu Bir Pandemi Günü - İstanbul 2022', teknik:'f/5, 1/1000sn, ISO-400', photo:'fotograflar/siyah-beyaz/siyah-beyaz-02.jpg'},
+    {n:'148', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Safranbolu Emekçilerinden - Karabük 2019', teknik:'f/8, 1/80sn, ISO-400', photo:'fotograflar/siyah-beyaz/siyah-beyaz-03.jpg'},
+    {n:'149', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Emeklilik Yürüyüşü - Karabük 2019', teknik:'f/5,6, 1/125sn, ISO-200', photo:'fotograflar/siyah-beyaz/siyah-beyaz-04.jpg'},
+    {n:'150', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Balıkçı Sabrı - İstanbul 2018', teknik:'f/5,6, 1/125sn, ISO-3200', photo:'fotograflar/siyah-beyaz/siyah-beyaz-05.jpg'},
+    {n:'151', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Kuşlara Fısıldayan Amca - İstanbul 2016', teknik:'f/5, 1/1250sn, ISO-400', photo:'fotograflar/siyah-beyaz/siyah-beyaz-06.jpg'},
+    {n:'152', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Balık Ağı Mevsimi - Balıkesir 2016', teknik:'f/9, 1/200sn, ISO-100', photo:'fotograflar/siyah-beyaz/siyah-beyaz-07.jpg'},
+    {n:'153', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'Şapkası Şekilli Amca - Avusturya 2022', teknik:'f/5,6, 1/640sn, ISO-200', photo:'fotograflar/siyah-beyaz/siyah-beyaz-08.jpg'}
   ];
 
   FRAMES.forEach(function(f, idx){ f.seed = idx*97 + 13; });
 
   // ---- gruplar (Index temasındaki sol menü + kapak fotoğrafı mantığı) ----
   var CATS = [
-    {key:'detay', label:'Detay', tag:'Yakın Kadrajlar', blurb:'Küçük dokunuşlar, yakın kadrajlar — günlük hayatın gözden kaçan detayları.'},
-    {key:'doga', label:'Doğa', tag:'Doğa Fotoğrafları', blurb:'Mevsimlerin izini süren kareler: çiçekler, ormanlar, göller.'},
-    {key:'insan', label:'İnsan', tag:'Sokak Portreleri', blurb:'Sokakta, an be an yakalanan insan hikâyeleri.'},
-    {key:'istanbul', label:'İstanbul', tag:'Şehir Manzaraları', blurb:'Şehrin ışığı, sokakları ve dokusu üzerine bir seçki.'},
-    {key:'sevimli-dostlar', label:'Sevimli Dostlar', tag:'Hayvan Fotoğrafları', blurb:'Dört ayaklı dostlarla geçen anlar.'},
-    {key:'siyah-beyaz', label:'Siyah Beyaz', tag:'Siyah Beyaz Kareler', blurb:'Renksiz kareler, ışığın ve gölgenin saf hâli. Fotoğraflar eklenene kadar bu bölüm yer tutucu kalacak.'}
+    {key:'detay', label:'Detay', tag:'Yakın Kadrajlar', blurb:'Küçük dokunuşlar, yakın kadrajlar — günlük hayatın gözden kaçan detayları.', coverN:'004'},
+    {key:'doga', label:'Doğa', tag:'Doğa Fotoğrafları', blurb:'Mevsimlerin izini süren kareler: çiçekler, ormanlar, göller.', coverN:'024'},
+    {key:'insan', label:'İnsan', tag:'Sokak Portreleri', blurb:'Sokakta, an be an yakalanan insan hikâyeleri.', coverN:'043'},
+    {key:'istanbul', label:'İstanbul', tag:'Şehir Manzaraları', blurb:'Şehrin ışığı, sokakları ve dokusu üzerine bir seçki.', coverN:'066'},
+    {key:'sevimli-dostlar', label:'Sevimli Dostlar', tag:'Hayvan Fotoğrafları', blurb:'Dört ayaklı dostlarla geçen anlar.', coverN:'121'},
+    {key:'siyah-beyaz', label:'Siyah Beyaz', tag:'Siyah Beyaz Kareler', blurb:'Renksiz kareler, ışığın ve gölgenin saf hâli.', coverN:'148'}
   ];
 
   var FRAMES_BY_CAT = {};
@@ -870,26 +928,17 @@
     intro.appendChild(p);
     content.appendChild(intro);
 
-    var note = document.createElement('div');
-    note.className = 'note';
-    var dot = document.createElement('span');
-    dot.className = 'dot';
-    dot.setAttribute('aria-hidden', 'true');
-    var noteP = document.createElement('p');
-    var strong = document.createElement('strong');
-    strong.textContent = 'Siyah Beyaz dışındaki tüm kareler artık gerçek fotoğraflar.';
-    noteP.appendChild(strong);
-    noteP.appendChild(document.createTextNode(' Siyah Beyaz kategorisi fotoğraflar eklenene kadar yer tutucu kalacak.'));
-    note.appendChild(dot);
-    note.appendChild(noteP);
-    content.appendChild(note);
-
     var grid = document.createElement('div');
     grid.className = 'cat-grid';
 
     CATS.forEach(function(c){
       var list = FRAMES_BY_CAT[c.key] || [];
       var cover = list[0];
+      if(c.coverN){
+        for(var ci=0; ci<list.length; ci++){
+          if(list[ci].n === c.coverN){ cover = list[ci]; break; }
+        }
+      }
 
       var tile = document.createElement('button');
       tile.type = 'button';
@@ -954,7 +1003,7 @@
     var feed = document.createElement('div');
     feed.className = 'cat-feed';
 
-    list.forEach(function(f){
+    list.forEach(function(f, idx){
       var item = document.createElement('figure');
       item.className = 'cat-feed-item';
 
@@ -971,7 +1020,7 @@
       no.textContent = 'N° ' + f.n;
       trigger.appendChild(no);
 
-      trigger.addEventListener('click', function(){ openLightbox(f, f.seed); });
+      trigger.addEventListener('click', function(){ openLightbox(f, f.seed, list, idx); });
 
       var figcap = document.createElement('figcaption');
       var capText = document.createElement('span');
@@ -1118,10 +1167,24 @@
   var lbCaption = document.getElementById('lbCaption');
   var lbTeknik = document.getElementById('lbTeknik');
   var lbDesc = document.getElementById('lbDesc');
+  var lbPrev = document.getElementById('lbPrev');
+  var lbNext = document.getElementById('lbNext');
   var lastFocused = null;
+  var lbList = null;   // açık karenin ait olduğu grup listesi (klavye/ok navigasyonu için)
+  var lbIndex = -1;    // o listedeki geçerli konum
 
-  function openLightbox(f, seed){
+  function updateNavVisibility(){
+    var canNav = !!(lbList && lbList.length > 1);
+    lbPrev.hidden = !canNav;
+    lbNext.hidden = !canNav;
+  }
+
+  function openLightbox(f, seed, list, idx){
     lastFocused = document.activeElement;
+    lbList = list || null;
+    lbIndex = (typeof idx === 'number') ? idx : -1;
+    updateNavVisibility();
+
     lbNo.textContent = 'N° ' + f.n;
     lbCat.textContent = f.label;
     lbCaption.textContent = f.cap;
@@ -1160,16 +1223,34 @@
     document.getElementById('lbClose').focus();
   }
 
+  function showLightboxAt(newIndex){
+    if(!lbList || !lbList.length) return;
+    var wrapped = (newIndex + lbList.length) % lbList.length;
+    var f = lbList[wrapped];
+    lbIndex = wrapped;
+    openLightbox(f, f.seed, lbList, wrapped);
+  }
+
+  function lightboxPrev(){ if(lbList && lbList.length > 1) showLightboxAt(lbIndex - 1); }
+  function lightboxNext(){ if(lbList && lbList.length > 1) showLightboxAt(lbIndex + 1); }
+
   function closeLightbox(){
     lightbox.hidden = true;
     document.body.style.overflow = '';
+    lbList = null;
+    lbIndex = -1;
     if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
 
   document.getElementById('lbClose').addEventListener('click', closeLightbox);
   document.getElementById('lbBackdrop').addEventListener('click', closeLightbox);
+  lbPrev.addEventListener('click', lightboxPrev);
+  lbNext.addEventListener('click', lightboxNext);
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && !lightbox.hidden) closeLightbox();
+    if(lightbox.hidden) return;
+    if(e.key === 'Escape'){ closeLightbox(); return; }
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); lightboxPrev(); return; }
+    if(e.key === 'ArrowRight'){ e.preventDefault(); lightboxNext(); return; }
   });
 
   // ---- ilk yükleme ----
