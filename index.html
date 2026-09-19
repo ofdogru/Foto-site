@@ -56,257 +56,138 @@
     color:var(--ink);
     font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing:antialiased;
-    padding-inline:20px;
   }
   a{color:inherit;}
-  .wrap{max-width:1040px; margin:0 auto;}
   .mono{font-family:'Space Mono', ui-monospace, monospace;}
   .serif{font-family:'Instrument Serif', ui-serif, Georgia, serif;}
 
-  /* sprocket strip */
-  .sprockets{
+  /* ---- shell: sol menü + sağ içerik ---- */
+  .shell{
     display:flex;
-    gap:14px;
-    overflow:hidden;
-    padding-block:10px;
-    max-width:1040px;
+    max-width:1400px;
     margin:0 auto;
-  }
-  .sprockets span{
-    flex:0 0 auto;
-    width:9px; height:9px;
-    border-radius:2px;
-    background:var(--line);
+    min-height:100vh;
   }
 
-  header.top{
+  .sidebar{
+    flex:0 0 264px;
+    width:264px;
+    position:sticky;
+    top:0;
+    align-self:flex-start;
+    height:100vh;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+    padding:30px 24px;
+    border-right:1px solid var(--line);
+  }
+
+  .sidebar-top{
     display:flex;
     flex-direction:column;
     gap:4px;
-    padding-block:28px 12px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--line);
   }
-  .wordmark{
+  .brand{
+    appearance:none; -webkit-appearance:none;
+    display:block;
+    background:none;
+    border:0;
+    padding:0;
+    margin:0;
+    text-align:left;
+    cursor:pointer;
     font-family:'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
     font-weight:800;
-    font-size:clamp(32px,7vw,64px);
+    font-size:21px;
+    line-height:1.2;
     letter-spacing:-0.01em;
-    line-height:1.02;
-    text-wrap:balance;
+    color:var(--ink);
   }
-  .top-tag{
+  .brand:hover{color:var(--accent-ink);}
+  .brand:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+  .sidebar-tag{
     font-size:11px;
-    letter-spacing:0.14em;
+    letter-spacing:0.12em;
     text-transform:uppercase;
     color:var(--muted);
   }
 
-  /* hero */
-  .hero{
-    position:relative;
-    border:1px solid var(--line);
-    border-radius:2px;
-    margin-block:14px 28px;
-    overflow:hidden;
-    background:var(--paper-2);
-  }
-  .hero canvas{
-    display:block;
-    width:100%;
-    height:clamp(260px,42vw,420px);
-  }
-  .hero-copy{
-    position:absolute;
-    inset:0;
+  .sidebar-section{
     display:flex;
     flex-direction:column;
-    justify-content:flex-end;
-    gap:10px;
-    padding:22px 24px;
-    background:linear-gradient(to top, rgba(0,0,0,0.42), rgba(0,0,0,0) 60%);
+    gap:2px;
   }
-  .hero-copy h1{
-    margin:0;
-    color:#F3F1E8;
+  .sidebar-section-label{
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    padding:0 10px 6px;
+  }
+  .nav-btn{
+    appearance:none; -webkit-appearance:none;
+    display:block;
+    width:100%;
+    text-align:left;
+    font:inherit;
+    font-size:14px;
+    background:transparent;
+    border:0;
+    border-radius:6px;
+    color:var(--ink-soft);
+    padding:9px 10px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .nav-btn:hover{background:var(--paper-2); color:var(--ink);}
+  .nav-btn:focus-visible{outline:2px solid var(--accent); outline-offset:-2px;}
+  .nav-btn.is-active{background:var(--accent); color:#F4FAF9;}
+
+  .sidebar-foot{
+    margin-top:auto;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+    font-size:11px;
+    color:var(--muted);
+  }
+  .sidebar-foot a{
+    color:var(--muted);
+    text-decoration:underline;
+    text-decoration-color:var(--line);
+    text-underline-offset:3px;
+  }
+  .sidebar-foot a:hover{color:var(--accent-ink); text-decoration-color:var(--accent);}
+
+  .content{
+    flex:1 1 auto;
+    min-width:0;
+    padding:34px 40px 70px;
+  }
+
+  /* ---- anasayfa: grup kapağı ızgarası ---- */
+  .home-intro{margin-bottom:28px; max-width:64ch;}
+  .home-intro h1{
+    margin:0 0 8px;
     font-family:'Instrument Serif', serif;
     font-style:italic;
     font-weight:400;
-    font-size:clamp(34px,6.4vw,64px);
-    line-height:1.02;
-    text-wrap:balance;
+    font-size:clamp(28px,4vw,42px);
+    line-height:1.06;
   }
-  .hero-copy p{
+  .home-intro p{
     margin:0;
-    max-width:46ch;
-    color:#DAD8CC;
     font-size:15px;
-    line-height:1.5;
-  }
-  .hero-meta{
-    position:absolute;
-    top:16px; left:18px;
-    display:flex; gap:14px;
-    font-size:11px;
-    color:#E7E5D9;
-    letter-spacing:0.08em;
-  }
-  .hero-meta span{opacity:0.85;}
-
-  /* about */
-  .about{
-    display:grid;
-    grid-template-columns:auto 1fr;
-    gap:22px 32px;
-    padding-block:6px 30px;
-    border-bottom:1px solid var(--line);
-  }
-  .about .label{
-    font-size:11px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--muted);
-    padding-top:4px;
-    white-space:nowrap;
-  }
-  .about p{
-    margin:0 0 12px;
-    max-width:62ch;
-    font-size:16px;
     line-height:1.65;
     color:var(--ink-soft);
   }
-  .about p:last-child{margin-bottom:0;}
-  .about strong{color:var(--ink); font-weight:600;}
 
-  /* gallery controls */
-  .gallery-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    flex-wrap:wrap;
-    padding-block:26px 16px;
-  }
-  .gallery-title{
-    font-family:'Instrument Serif', serif;
-    font-style:italic;
-    font-size:26px;
-  }
-  .filters{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-  }
-  .filters button{
-    font-family:'Space Mono', monospace;
-    font-size:12px;
-    letter-spacing:0.02em;
-    background:transparent;
-    border:1px solid var(--line);
-    color:var(--muted);
-    padding:7px 12px;
-    border-radius:20px;
-    cursor:pointer;
-    transition:background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .filters button:hover{border-color:var(--accent); color:var(--ink);}
-  .filters button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
-  .filters button[aria-pressed="true"]{
-    background:var(--accent);
-    border-color:var(--accent);
-    color:#F4FAF9;
-  }
-
-  /* grid */
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
-    gap:22px 18px;
-    padding-bottom:40px;
-  }
-  figure.frame{
-    margin:0;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  figure.frame[hidden]{display:none;}
-  button.frame-art{
-    appearance:none;
-    -webkit-appearance:none;
-    display:block;
-    width:100%;
-    margin:0;
-    padding:0;
-    font:inherit;
-    color:inherit;
-    text-align:left;
-    cursor:zoom-in;
-    position:relative;
-    border:1px solid var(--line);
-    border-radius:2px;
-    background:var(--paper-2);
-    box-shadow:var(--frame-shadow);
-    aspect-ratio:3/2;
-    overflow:hidden;
-  }
-  button.frame-art:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
-  .frame-art canvas{
-    display:block;
-    width:100%;
-    height:100%;
-  }
-  .frame-art img{
-    display:block;
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    background:var(--paper-2);
-    -webkit-user-select:none;
-    user-select:none;
-    -webkit-user-drag:none;
-    pointer-events:none;
-  }
-  .frame-no{
-    position:absolute;
-    top:6px; left:8px;
-    font-family:'Space Mono', monospace;
-    font-size:11px;
-    color:#F1EFE4;
-    text-shadow:0 1px 2px rgba(0,0,0,0.55);
-    letter-spacing:0.02em;
-  }
-  .frame-cat{
-    position:absolute;
-    top:6px; right:8px;
-    font-family:'Space Mono', monospace;
-    font-size:10px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    color:#F1EFE4;
-    text-shadow:0 1px 2px rgba(0,0,0,0.55);
-  }
-  figcaption{
-    display:flex;
-    justify-content:space-between;
-    gap:8px;
-    font-size:13px;
-    color:var(--muted);
-  }
-  figcaption .cap{color:var(--ink-soft);}
-  figcaption .t{font-family:'Space Mono', monospace; font-size:11px; white-space:nowrap;}
-  .frame-desc{
-    margin:0;
-    font-size:12.5px;
-    line-height:1.5;
-    color:var(--muted);
-    font-style:italic;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
-
-  /* note */
   .note{
     display:flex;
     gap:12px;
@@ -314,8 +195,9 @@
     border:1px dashed var(--line);
     border-radius:3px;
     padding:14px 16px;
-    margin-bottom:36px;
+    margin-bottom:28px;
     background:var(--paper-2);
+    max-width:70ch;
   }
   .note .dot{
     flex:0 0 auto;
@@ -329,31 +211,182 @@
     font-size:13.5px;
     line-height:1.6;
     color:var(--ink-soft);
-    max-width:70ch;
   }
   .note strong{color:var(--ink);}
 
-  footer{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:10px;
-    padding-block:20px 30px;
-    border-top:1px solid var(--line);
-    font-size:13px;
-    color:var(--muted);
+  .cat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:22px;
   }
-  footer a{
+  button.cat-tile{
+    appearance:none; -webkit-appearance:none;
+    position:relative;
+    display:block;
+    width:100%;
+    margin:0;
+    padding:0;
+    font:inherit;
+    color:inherit;
+    text-align:left;
+    cursor:pointer;
+    border:1px solid var(--line);
+    border-radius:3px;
+    overflow:hidden;
+    aspect-ratio:4/3;
+    background:var(--paper-2);
+    box-shadow:var(--frame-shadow);
+  }
+  button.cat-tile:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .cat-tile canvas{display:block; width:100%; height:100%;}
+  .cat-tile img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    background:var(--paper-2);
+    -webkit-user-select:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    pointer-events:none;
+  }
+  .cat-tile-count{
+    position:absolute;
+    top:8px; right:10px;
+    font-size:10px;
+    letter-spacing:0.06em;
+    color:#F1EFE4;
+    text-shadow:0 1px 2px rgba(0,0,0,0.55);
+  }
+  .cat-tile-label{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding:16px 16px 14px;
+    background:linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0) 75%);
+    color:#F3F1E8;
+    font-family:'Instrument Serif', serif;
+    font-style:italic;
+    font-size:21px;
+  }
+
+  /* ---- sayfa panelleri (Hakkımda / İletişim / Sosyal Medya) ---- */
+  .page-panel{max-width:620px;}
+  .page-panel h2{
+    margin:0 0 16px;
+    font-family:'Instrument Serif', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(26px,4vw,36px);
+  }
+  .page-panel p{
+    margin:0 0 14px;
+    font-size:15px;
+    line-height:1.65;
     color:var(--ink-soft);
+  }
+  .page-panel p:last-child{margin-bottom:0;}
+  .page-panel strong{color:var(--ink); font-weight:600;}
+  .social-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .social-list a{
+    font-size:15px;
+    color:var(--accent-ink);
     text-decoration:underline;
     text-decoration-color:var(--line);
     text-underline-offset:3px;
   }
-  footer a:hover{color:var(--accent); text-decoration-color:var(--accent);}
-  .foot-mono{font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.04em;}
+  .social-list a:hover{text-decoration-color:var(--accent);}
 
-  /* lightbox */
+  /* ---- grup detayı: geri düğmesi + büyük foto akışı ---- */
+  .cat-back{
+    appearance:none; -webkit-appearance:none;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:none;
+    border:0;
+    padding:0;
+    margin-bottom:16px;
+    font-size:12px;
+    letter-spacing:0.02em;
+    color:var(--muted);
+    cursor:pointer;
+  }
+  .cat-back:hover{color:var(--accent-ink);}
+  .cat-back:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  .cat-view-head{max-width:70ch; margin-bottom:8px;}
+  .cat-view-head h2{
+    margin:0 0 8px;
+    font-family:'Instrument Serif', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(26px,4vw,38px);
+  }
+  .cat-view-head p{
+    margin:0;
+    font-size:15px;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+
+  .cat-feed{
+    display:flex;
+    flex-direction:column;
+    gap:38px;
+    margin-top:30px;
+    max-width:900px;
+  }
+  figure.cat-feed-item{margin:0; display:flex; flex-direction:column; gap:10px;}
+  button.cat-feed-art{
+    appearance:none; -webkit-appearance:none;
+    display:block;
+    width:100%;
+    margin:0;
+    padding:0;
+    font:inherit;
+    color:inherit;
+    text-align:left;
+    cursor:zoom-in;
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:2px;
+    background:var(--paper-2);
+    box-shadow:var(--frame-shadow);
+    overflow:hidden;
+  }
+  button.cat-feed-art:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .cat-feed-art canvas{display:block; width:100%; height:380px;}
+  .cat-feed-art img{
+    display:block;
+    width:100%;
+    max-height:78vh;
+    object-fit:contain;
+    background:var(--paper-2);
+    -webkit-user-select:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    pointer-events:none;
+  }
+  .frame-no{
+    position:absolute;
+    top:8px; left:10px;
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    color:#F1EFE4;
+    text-shadow:0 1px 2px rgba(0,0,0,0.55);
+    letter-spacing:0.02em;
+  }
+  figcaption{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  figcaption .cap{color:var(--ink-soft);}
+  figcaption .t{font-family:'Space Mono', monospace; font-size:11px; white-space:nowrap;}
+
+  /* ---- lightbox ---- */
   .lightbox{
     position:fixed;
     inset:0;
@@ -478,9 +511,32 @@
   .like-count{font-size:13px;}
   .like-hint{font-size:12px; color:var(--muted);}
 
-  @media (max-width:560px){
-    .about{grid-template-columns:1fr;}
-    .about .label{padding-top:0;}
+  @media (max-width:860px){
+    .shell{flex-direction:column;}
+    .sidebar{
+      position:relative;
+      width:100%;
+      height:auto;
+      flex-direction:column;
+      border-right:none;
+      border-bottom:1px solid var(--line);
+      padding:18px 18px 14px;
+      gap:14px;
+    }
+    .sidebar-top{padding-bottom:14px;}
+    .sidebar-section{flex-direction:row; flex-wrap:nowrap; overflow-x:auto; gap:8px; padding-bottom:2px;}
+    .sidebar-section-label{display:none;}
+    .nav-btn{
+      width:auto;
+      white-space:nowrap;
+      flex:0 0 auto;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:7px 14px;
+    }
+    .nav-btn.is-active{border-color:var(--accent);}
+    .sidebar-foot{display:none;}
+    .content{padding:22px 18px 50px;}
     .lightbox{padding:0;}
     .lightbox-panel{width:100%; max-height:100vh; border-radius:0;}
   }
@@ -490,57 +546,32 @@
   }
 </style>
 
-<div class="sprockets" aria-hidden="true" id="sprocketsTop"></div>
-
-<div class="wrap">
-  <header class="top">
-    <div class="wordmark">Ömer Faruk Doğru</div>
-    <div class="top-tag">Fotoğraf Günlüğü — İstanbul</div>
-  </header>
-
-  <div class="hero">
-    <canvas id="heroCanvas" width="1200" height="500" aria-hidden="true"></canvas>
-    <div class="hero-meta"><span>KODAK PORTRA 400</span><span>N° 001–147</span><span>İSTANBUL, 2026</span></div>
-    <div class="hero-copy">
-      <h1>Işığın kaydı.</h1>
-      <p>Sokakta, doğal ışıkla ve çoğu zaman tek karede — 35mm film ve dijitalle çektiğim fotoğraflardan bir seçki.</p>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <button type="button" class="brand" id="brandBtn" data-route="">Ömer Faruk Doğru</button>
+      <div class="sidebar-tag">Fotoğraf Günlüğü — İstanbul</div>
     </div>
-  </div>
 
-  <section class="about">
-    <div class="label">Hakkımda</div>
-    <div>
-      <p>Merhaba, ben Ömer Faruk Doğru. İstanbul sokaklarında, sabah erken saatlerin ve akşamüstü ışığının peşinde dolaşarak fotoğraf çekiyorum. Çoğu kare 35mm film, bazıları dijital — ama hepsi kadrajı beklemek üzerine kurulu.</p>
-      <p>Bu sayfa, kendi işlerimi bir araya topladığım <strong>kişisel bir kontak föy</strong>: aşağıdaki kareler şimdilik yer tutucu, gerçek fotoğraflarımı grup grup ekledikçe burası gerçek bir portfolyoya dönüşecek.</p>
+    <nav class="sidebar-section" aria-label="Sayfalar">
+      <div class="sidebar-section-label">Sayfalar</div>
+      <button type="button" class="nav-btn" data-route="hakkimda">Hakkımda</button>
+      <button type="button" class="nav-btn" data-route="iletisim">İletişim</button>
+      <button type="button" class="nav-btn" data-route="sosyal-medya">Sosyal Medya</button>
+    </nav>
+
+    <nav class="sidebar-section" aria-label="Gruplar" id="catNav">
+      <div class="sidebar-section-label">Gruplar</div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <span>İstanbul, 2026</span>
+      <span><a href="https://omerfarukdogru.com.tr">omerfarukdogru.com.tr</a></span>
+      <span class="mono">© ÖMER FARUK DOĞRU</span>
     </div>
-  </section>
+  </aside>
 
-  <div class="gallery-head">
-    <div class="gallery-title">Kontak Föyü</div>
-    <div class="filters" role="group" aria-label="Gruba göre filtrele" id="filters">
-      <button type="button" data-filter="all" aria-pressed="true">Tümü</button>
-      <button type="button" data-filter="detay" aria-pressed="false">Detay</button>
-      <button type="button" data-filter="doga" aria-pressed="false">Doğa</button>
-      <button type="button" data-filter="insan" aria-pressed="false">İnsan</button>
-      <button type="button" data-filter="istanbul" aria-pressed="false">İstanbul</button>
-      <button type="button" data-filter="sevimli-dostlar" aria-pressed="false">Sevimli Dostlar</button>
-      <button type="button" data-filter="sokak" aria-pressed="false">Sokak</button>
-    </div>
-  </div>
-
-  <div class="note">
-    <span class="dot" aria-hidden="true"></span>
-    <p><strong>Sokak dışındaki tüm kareler artık gerçek fotoğraflar.</strong> Sokak kategorisi fotoğraflar eklenene kadar yer tutucu kalacak. Bir kareye tıklayınca büyük halini, çekim bilgilerini ve beğeni butonunu görebilirsin.</p>
-  </div>
-
-  <div class="grid" id="grid"></div>
-
-  <div class="sprockets" aria-hidden="true" id="sprocketsBottom"></div>
-
-  <footer>
-    <div>İstanbul, 2026 — <a href="https://omerfarukdogru.com.tr">omerfarukdogru.com.tr</a></div>
-    <div class="foot-mono">© ÖMER FARUK DOĞRU</div>
-  </footer>
+  <main class="content" id="content"></main>
 </div>
 
 <div class="lightbox" id="lightbox" hidden>
@@ -579,19 +610,6 @@
   document.addEventListener('dragstart', function(e){
     if(e.target && e.target.tagName === 'IMG') e.preventDefault();
   });
-
-  // sprocket strips
-  function fillSprockets(el, count){
-    if(!el) return;
-    var frag = document.createDocumentFragment();
-    for(var i=0;i<count;i++){
-      var s = document.createElement('span');
-      frag.appendChild(s);
-    }
-    el.appendChild(frag);
-  }
-  fillSprockets(document.getElementById('sprocketsTop'), 46);
-  fillSprockets(document.getElementById('sprocketsBottom'), 46);
 
   // seeded PRNG so each frame is stable across renders
   function mulberry32(a){
@@ -643,42 +661,6 @@
       ctx.fillRect(gx, gy, 1, 1);
     }
   }
-
-  // hero: grain + gentle light-leak sweep
-  function paintHero(canvas){
-    var rng = mulberry32(4177);
-    var ctx = canvas.getContext('2d');
-    var w = canvas.width, h = canvas.height;
-    var grad = ctx.createLinearGradient(0,0,w,h);
-    grad.addColorStop(0,'#3a3d3a');
-    grad.addColorStop(0.55,'#1c1e1d');
-    grad.addColorStop(1,'#0f1110');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0,0,w,h);
-
-    var leak = ctx.createRadialGradient(w*0.86,h*0.08,10, w*0.86,h*0.08, w*0.55);
-    leak.addColorStop(0,'rgba(201,122,34,0.55)');
-    leak.addColorStop(1,'rgba(201,122,34,0)');
-    ctx.fillStyle = leak;
-    ctx.fillRect(0,0,w,h);
-
-    var wash = ctx.createRadialGradient(w*0.1,h*0.95,10, w*0.1,h*0.95, w*0.5);
-    wash.addColorStop(0,'rgba(22,124,116,0.35)');
-    wash.addColorStop(1,'rgba(22,124,116,0)');
-    ctx.fillStyle = wash;
-    ctx.fillRect(0,0,w,h);
-
-    var grainCount = Math.floor(w*h*0.05);
-    for(var g=0; g<grainCount; g++){
-      var gx = rng()*w, gy = rng()*h;
-      var shade = rng() > 0.5 ? 255 : 0;
-      ctx.fillStyle = 'rgba('+shade+','+shade+','+shade+','+(rng()*0.05).toFixed(3)+')';
-      ctx.fillRect(gx, gy, 1, 1);
-    }
-  }
-
-  var heroCanvas = document.getElementById('heroCanvas');
-  if(heroCanvas) paintHero(heroCanvas);
 
   // gallery data: frame number, grup (kategori), kısa alt yazı, uzun açıklama (sonra doldurulacak)
   var PLACEHOLDER_DESC = 'Bu fotoğrafın hikâyesini birkaç cümleyle buraya ekleyeceğiz — nerede, ne zaman ve neden çekildiğini anlatan kısa bir not.';
@@ -828,28 +810,47 @@
     {n:'143', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Küstürülenlerden - İstanbul 2018', teknik:'f/5,6, 1/800sn, ISO-400', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-50.jpg'},
     {n:'144', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Küçük Kurbağa - İstanbul 2019', teknik:'f/8, 1/640sn, ISO-200', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-51.jpg'},
     {n:'145', cat:'sevimli-dostlar', label:'Sevimli Dostlar', cap:'Başyapıt - İstanbul 2019', teknik:'f/10, 1/30sn, ISO-250', photo:'fotograflar/sevimli-dostlar/sevimli-dostlar-52.jpg'},
-    {n:'146', cat:'sokak', label:'Sokak', cap:'Beyoğlu, akşam 19:40'},
-    {n:'147', cat:'sokak', label:'Sokak', cap:'Eminönü, öğle vapuru'}
+    {n:'146', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'İlk kare'},
+    {n:'147', cat:'siyah-beyaz', label:'Siyah Beyaz', cap:'İkinci kare'}
   ];
 
-  var grid = document.getElementById('grid');
-  var frag = document.createDocumentFragment();
-  FRAMES.forEach(function(f, idx){
-    var seed = idx*97 + 13;
-    var fig = document.createElement('figure');
-    fig.className = 'frame';
-    fig.dataset.cat = f.cat;
+  FRAMES.forEach(function(f, idx){ f.seed = idx*97 + 13; });
 
-    var trigger = document.createElement('button');
-    trigger.type = 'button';
-    trigger.className = 'frame-art';
-    trigger.setAttribute('aria-label', f.label + ' — ' + f.cap + ' — büyütmek için tıkla');
+  // ---- gruplar (Index temasındaki sol menü + kapak fotoğrafı mantığı) ----
+  var CATS = [
+    {key:'detay', label:'Detay', blurb:'Küçük dokunuşlar, yakın kadrajlar — günlük hayatın gözden kaçan detayları.'},
+    {key:'doga', label:'Doğa', blurb:'Mevsimlerin izini süren kareler: çiçekler, ormanlar, göller.'},
+    {key:'insan', label:'İnsan', blurb:'Sokakta, an be an yakalanan insan hikâyeleri.'},
+    {key:'istanbul', label:'İstanbul', blurb:'Şehrin ışığı, sokakları ve dokusu üzerine bir seçki.'},
+    {key:'sevimli-dostlar', label:'Sevimli Dostlar', blurb:'Dört ayaklı dostlarla geçen anlar.'},
+    {key:'siyah-beyaz', label:'Siyah Beyaz', blurb:'Renksiz kareler, ışığın ve gölgenin saf hâli. Fotoğraflar eklenene kadar bu bölüm yer tutucu kalacak.'}
+  ];
 
+  var FRAMES_BY_CAT = {};
+  FRAMES.forEach(function(f){
+    if(!FRAMES_BY_CAT[f.cat]) FRAMES_BY_CAT[f.cat] = [];
+    FRAMES_BY_CAT[f.cat].push(f);
+  });
+
+  // sol menüdeki grup listesini doldur
+  var catNav = document.getElementById('catNav');
+  CATS.forEach(function(c){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nav-btn';
+    btn.dataset.route = c.key;
+    btn.textContent = c.label;
+    catNav.appendChild(btn);
+  });
+
+  var content = document.getElementById('content');
+
+  function makeMedia(f, altPrefix){
     var media;
     if(f.photo){
       media = document.createElement('img');
       media.src = f.photo;
-      media.alt = f.label + ' — ' + f.cap;
+      media.alt = (altPrefix || (f.label + ' — ' + f.cap));
       media.loading = 'lazy';
       media.decoding = 'async';
       media.draggable = false;
@@ -857,82 +858,215 @@
     } else {
       media = document.createElement('canvas');
     }
-    trigger.appendChild(media);
+    return media;
+  }
 
-    var no = document.createElement('span');
-    no.className = 'frame-no mono';
-    no.textContent = 'N° ' + f.n;
-    trigger.appendChild(no);
+  function renderHome(){
+    content.innerHTML = '';
 
-    var cat = document.createElement('span');
-    cat.className = 'frame-cat';
-    cat.textContent = f.label;
-    trigger.appendChild(cat);
+    var intro = document.createElement('div');
+    intro.className = 'home-intro';
+    var h1 = document.createElement('h1');
+    h1.textContent = 'Işığın kaydı.';
+    var p = document.createElement('p');
+    p.textContent = 'Doğal ışıkla, çoğu zaman tek karede — 35mm film ve dijitalle çektiğim fotoğraflardan bir seçki. Bir grubu seçince o gruptaki tüm kareleri büyük halleriyle görebilirsin.';
+    intro.appendChild(h1);
+    intro.appendChild(p);
+    content.appendChild(intro);
 
-    trigger.addEventListener('click', function(){
-      openLightbox(f, seed);
+    var note = document.createElement('div');
+    note.className = 'note';
+    var dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.setAttribute('aria-hidden', 'true');
+    var noteP = document.createElement('p');
+    var strong = document.createElement('strong');
+    strong.textContent = 'Siyah Beyaz dışındaki tüm kareler artık gerçek fotoğraflar.';
+    noteP.appendChild(strong);
+    noteP.appendChild(document.createTextNode(' Siyah Beyaz kategorisi fotoğraflar eklenene kadar yer tutucu kalacak.'));
+    note.appendChild(dot);
+    note.appendChild(noteP);
+    content.appendChild(note);
+
+    var grid = document.createElement('div');
+    grid.className = 'cat-grid';
+
+    CATS.forEach(function(c){
+      var list = FRAMES_BY_CAT[c.key] || [];
+      var cover = list[0];
+
+      var tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'cat-tile';
+      tile.setAttribute('aria-label', c.label + ' grubunu aç');
+
+      var media = makeMedia(cover || {}, c.label);
+      tile.appendChild(media);
+
+      var count = document.createElement('span');
+      count.className = 'cat-tile-count mono';
+      count.textContent = list.length + ' kare';
+      tile.appendChild(count);
+
+      var label = document.createElement('span');
+      label.className = 'cat-tile-label';
+      label.textContent = c.label;
+      tile.appendChild(label);
+
+      tile.addEventListener('click', function(){ goTo(c.key); });
+
+      grid.appendChild(tile);
+
+      if(cover && !cover.photo){
+        requestAnimationFrame(function(){ paintFrame(media, cover.seed); });
+      }
     });
 
-    var figcap = document.createElement('figcaption');
-    var capText = document.createElement('span');
-    capText.className = 'cap';
-    capText.textContent = f.cap;
-    figcap.appendChild(capText);
-    if(f.teknik){
-      var teknikText = document.createElement('span');
-      teknikText.className = 't mono';
-      teknikText.textContent = f.teknik;
-      figcap.appendChild(teknikText);
-    }
+    content.appendChild(grid);
+  }
 
-    fig.appendChild(trigger);
-    fig.appendChild(figcap);
-    if(!f.photo){
-      var desc = document.createElement('p');
-      desc.className = 'frame-desc';
-      desc.textContent = f.desc || PLACEHOLDER_DESC;
-      fig.appendChild(desc);
-    }
-    frag.appendChild(fig);
+  function renderCategory(key){
+    var c = null;
+    for(var i=0;i<CATS.length;i++){ if(CATS[i].key === key){ c = CATS[i]; break; } }
+    if(!c){ renderHome(); return; }
+    var list = FRAMES_BY_CAT[key] || [];
 
-    if(!f.photo){
-      requestAnimationFrame(function(){ paintFrame(media, seed); });
-    }
-  });
-  grid.appendChild(frag);
+    content.innerHTML = '';
 
-  // filters
-  var filterBtns = document.querySelectorAll('#filters button');
-  filterBtns.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      filterBtns.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
-      btn.setAttribute('aria-pressed','true');
-      var f = btn.dataset.filter;
-      document.querySelectorAll('#grid .frame').forEach(function(fig){
-        fig.hidden = (f !== 'all' && fig.dataset.cat !== f);
-      });
+    var back = document.createElement('button');
+    back.type = 'button';
+    back.className = 'cat-back mono';
+    back.textContent = '← Tüm Gruplar';
+    back.addEventListener('click', function(){ goTo(''); });
+    content.appendChild(back);
+
+    var head = document.createElement('div');
+    head.className = 'cat-view-head';
+    var h2 = document.createElement('h2');
+    h2.textContent = c.label;
+    var p = document.createElement('p');
+    p.textContent = c.blurb;
+    head.appendChild(h2);
+    head.appendChild(p);
+    content.appendChild(head);
+
+    var feed = document.createElement('div');
+    feed.className = 'cat-feed';
+
+    list.forEach(function(f){
+      var item = document.createElement('figure');
+      item.className = 'cat-feed-item';
+
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'cat-feed-art';
+      trigger.setAttribute('aria-label', f.label + ' — ' + f.cap + ' — büyütmek için tıkla');
+
+      var media = makeMedia(f);
+      trigger.appendChild(media);
+
+      var no = document.createElement('span');
+      no.className = 'frame-no mono';
+      no.textContent = 'N° ' + f.n;
+      trigger.appendChild(no);
+
+      trigger.addEventListener('click', function(){ openLightbox(f, f.seed); });
+
+      var figcap = document.createElement('figcaption');
+      var capText = document.createElement('span');
+      capText.className = 'cap';
+      capText.textContent = f.cap;
+      figcap.appendChild(capText);
+      if(f.teknik){
+        var teknikText = document.createElement('span');
+        teknikText.className = 't mono';
+        teknikText.textContent = f.teknik;
+        figcap.appendChild(teknikText);
+      }
+
+      item.appendChild(trigger);
+      item.appendChild(figcap);
+      feed.appendChild(item);
+
+      if(!f.photo){
+        requestAnimationFrame(function(){ paintFrame(media, f.seed); });
+      }
     });
-  });
 
-  // ---- lightbox ----
-  var lightbox = document.getElementById('lightbox');
-  var lbArt = document.getElementById('lbArt');
-  var lbCanvas = document.getElementById('lbCanvas');
-  var lbImg = document.getElementById('lbImg');
-  var lbNo = document.getElementById('lbNo');
-  var lbCat = document.getElementById('lbCat');
-  var lbCaption = document.getElementById('lbCaption');
-  var lbTeknik = document.getElementById('lbTeknik');
-  var lbDesc = document.getElementById('lbDesc');
-  var lbLikeBtn = document.getElementById('lbLikeBtn');
-  var lbLikeCount = document.getElementById('lbLikeCount');
-  var lastFocused = null;
+    content.appendChild(feed);
+  }
+
+  function renderAbout(){
+    content.innerHTML = '';
+    var panel = document.createElement('div');
+    panel.className = 'page-panel';
+    panel.innerHTML =
+      '<h2>Hakkımda</h2>' +
+      '<p>Merhaba, ben Ömer Faruk Doğru. İstanbul sokaklarında, sabah erken saatlerin ve akşamüstü ışığının peşinde dolaşarak fotoğraf çekiyorum. Çoğu kare 35mm film, bazıları dijital — ama hepsi kadrajı beklemek üzerine kurulu.</p>' +
+      '<p>Bu sayfa, kendi işlerimi bir araya topladığım <strong>kişisel bir kontak föy</strong>: sol menüden bir grup seçerek fotoğraflarımı takip edebilirsin.</p>';
+    content.appendChild(panel);
+  }
+
+  function renderContact(){
+    content.innerHTML = '';
+    var panel = document.createElement('div');
+    panel.className = 'page-panel';
+    panel.innerHTML =
+      '<h2>İletişim</h2>' +
+      '<p>Fotoğraflarla ilgili bir sorun, iş birliği teklifin ya da baskı talebin varsa aşağıdaki kanaldan ulaşabilirsin.</p>' +
+      '<p class="mono">[ buraya e-posta adresini ekle ]</p>';
+    content.appendChild(panel);
+  }
+
+  function renderSocial(){
+    content.innerHTML = '';
+    var panel = document.createElement('div');
+    panel.className = 'page-panel';
+    panel.innerHTML =
+      '<h2>Sosyal Medya</h2>' +
+      '<p>Daha fazla kare ve kayıt dışı paylaşımlar için:</p>' +
+      '<ul class="social-list">' +
+        '<li><a href="#" class="mono">[ Instagram linkini buraya ekle ]</a></li>' +
+      '</ul>';
+    content.appendChild(panel);
+  }
+
+  // ---- yönlendirme (URL karmasıyla: paylaşılabilir bağlantılar için) ----
+  function setActive(routeId){
+    document.querySelectorAll('.nav-btn').forEach(function(b){
+      b.classList.toggle('is-active', b.dataset.route === routeId);
+    });
+    document.getElementById('brandBtn').classList.toggle('is-active', routeId === '');
+  }
+
+  function route(){
+    var hash = decodeURIComponent(location.hash.replace('#',''));
+    if(hash === 'hakkimda'){ renderAbout(); setActive('hakkimda'); }
+    else if(hash === 'iletisim'){ renderContact(); setActive('iletisim'); }
+    else if(hash === 'sosyal-medya'){ renderSocial(); setActive('sosyal-medya'); }
+    else if(FRAMES_BY_CAT.hasOwnProperty(hash)){ renderCategory(hash); setActive(hash); }
+    else { renderHome(); setActive(''); }
+    window.scrollTo(0,0);
+    content.scrollTop = 0;
+  }
+
+  function goTo(routeId){
+    if(location.hash.replace('#','') === routeId){ route(); }
+    else { location.hash = routeId; }
+  }
+
+  document.querySelectorAll('[data-route]').forEach(function(el){
+    el.addEventListener('click', function(){ goTo(el.dataset.route); });
+  });
+  window.addEventListener('hashchange', route);
 
   // ---- girişsiz beğeni sistemi ----
   // Paylaşılan (herkes için ortak) sayaç, ücretsiz ve hesap gerektirmeyen bir
   // genel API üzerinden tutuluyor. Servis geçici olarak yanıt vermezse buton
   // yine de "beğenildi" görünür, sadece sayı görünmez — sayfa asla bozuk görünmez.
   var LIKE_NAMESPACE = 'omerfarukdogru-com-tr';
+  var lbLikeBtn = document.getElementById('lbLikeBtn');
+  var lbLikeCount = document.getElementById('lbLikeCount');
 
   function likeKey(term){ return 'begeni:' + term; }
   function hasLiked(term){
@@ -972,6 +1106,18 @@
       })
       .catch(function(){ /* sessizce geç, buton yine de beğenilmiş görünür */ });
   });
+
+  // ---- lightbox ----
+  var lightbox = document.getElementById('lightbox');
+  var lbArt = document.getElementById('lbArt');
+  var lbCanvas = document.getElementById('lbCanvas');
+  var lbImg = document.getElementById('lbImg');
+  var lbNo = document.getElementById('lbNo');
+  var lbCat = document.getElementById('lbCat');
+  var lbCaption = document.getElementById('lbCaption');
+  var lbTeknik = document.getElementById('lbTeknik');
+  var lbDesc = document.getElementById('lbDesc');
+  var lastFocused = null;
 
   function openLightbox(f, seed){
     lastFocused = document.activeElement;
@@ -1024,5 +1170,8 @@
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && !lightbox.hidden) closeLightbox();
   });
+
+  // ---- ilk yükleme ----
+  route();
 })();
 </script>
