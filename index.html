@@ -680,6 +680,7 @@
     flex:0 0 auto;
   }
   .lightbox-side.is-active{display:flex;}
+  .lightbox-side.is-below{max-width:520px;}
   #lbSide .lightbox-cat{
     font-size:10.5px;
     letter-spacing:0.14em;
@@ -899,12 +900,23 @@
     .content{padding:22px 18px 50px;}
     .lightbox{padding:8px;}
     .lightbox-panel{max-height:100vh;}
+    .lightbox-stage{flex-direction:column; gap:14px;}
     .lightbox-art img{max-height:78vh;}
     .lightbox-close{top:10px; right:10px; width:34px; height:34px; font-size:15px;}
     .lightbox-nav{width:34px; height:34px; font-size:17px;}
     .lightbox-prev{left:6px;}
     .lightbox-next{right:6px;}
-    .lightbox-side{display:none !important;}
+    /* açıklama, fotoğrafın altında yeterli boş alan varsa dışına
+       (bu bölüm), yer yoksa (örn. yatay telefon) fotoğrafın içine yazılır */
+    .lightbox-side{
+      display:none;
+      width:100%;
+      max-width:100%;
+      flex:none;
+      gap:12px;
+      padding:0 4px;
+    }
+    .lightbox-side.is-active{display:flex;}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -1641,17 +1653,22 @@
   }
 
   // Açıklama, dik/kare kareler için fotoğrafın sağındaki boş alana,
-  // sayfaya komple sığan geniş kareler için ise fotoğrafın içine,
-  // sol alt köşeye hafif belirgin biçimde yerleştirilir.
+  // mobilde fotoğrafın altında boş (siyah) alan varsa hemen altına,
+  // hiç yer yoksa (örn. yatay telefon) fotoğrafın içine, sol alt
+  // köşeye hafif belirgin biçimde yerleştirilir.
   function updateCaptionLayout(){
     if(lightbox.hidden) return;
     var media = lbImg.hidden ? lbCanvas : lbImg;
     var mediaRect = media.getBoundingClientRect();
     var viewportW = window.innerWidth;
+    var viewportH = window.innerHeight;
     var spaceRight = viewportW - mediaRect.right;
+    var spaceBelow = viewportH - mediaRect.bottom;
     var useSide = viewportW > 860 && spaceRight > 300;
-    lbSide.classList.toggle('is-active', useSide);
-    if(useSide){
+    var useBelow = !useSide && spaceBelow > 140;
+    lbSide.classList.toggle('is-active', useSide || useBelow);
+    lbSide.classList.toggle('is-below', useBelow);
+    if(useSide || useBelow){
       if(lbCaptionBox.parentNode !== lbSide) lbSide.appendChild(lbCaptionBox);
     } else {
       if(lbCaptionBox.parentNode !== lbArt) lbArt.appendChild(lbCaptionBox);
