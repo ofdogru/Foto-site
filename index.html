@@ -900,23 +900,28 @@
     .content{padding:22px 18px 50px;}
     .lightbox{padding:8px;}
     .lightbox-panel{max-height:100vh;}
-    .lightbox-stage{flex-direction:column; gap:14px;}
+    .lightbox-stage.is-caption-below{flex-direction:column; gap:14px;}
     .lightbox-art img{max-height:78vh;}
     .lightbox-close{top:10px; right:10px; width:34px; height:34px; font-size:15px;}
     .lightbox-nav{width:34px; height:34px; font-size:17px;}
     .lightbox-prev{left:6px;}
     .lightbox-next{right:6px;}
-    /* açıklama, fotoğrafın altında yeterli boş alan varsa dışına
-       (bu bölüm), yer yoksa (örn. yatay telefon) fotoğrafın içine yazılır */
-    .lightbox-side{
-      display:none;
+    /* açıklama, fotoğrafın etrafında yeterli boş alan varsa dışına
+       (dikeyde altına, yatay telefonda sağına) — hiç yer yoksa
+       fotoğrafın içine yazılır */
+    .lightbox-side{display:none;}
+    .lightbox-side.is-active{display:flex;}
+    .lightbox-side.is-below{
       width:100%;
       max-width:100%;
       flex:none;
       gap:12px;
       padding:0 4px;
     }
-    .lightbox-side.is-active{display:flex;}
+    .lightbox-side.is-active:not(.is-below){
+      max-width:250px;
+      gap:16px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -1652,10 +1657,10 @@
     lbNext.hidden = !canNav;
   }
 
-  // Açıklama, dik/kare kareler için fotoğrafın sağındaki boş alana,
-  // mobilde fotoğrafın altında boş (siyah) alan varsa hemen altına,
-  // hiç yer yoksa (örn. yatay telefon) fotoğrafın içine, sol alt
-  // köşeye hafif belirgin biçimde yerleştirilir.
+  // Açıklama, fotoğrafın sağında boş alan varsa (masaüstü ya da yatay
+  // telefon/tablet) o boşluğa, sağda yer yoksa ama altında boş (siyah)
+  // alan varsa (dikey telefon) hemen altına, hiç yer yoksa fotoğrafın
+  // içine, sol alt köşeye hafif belirgin biçimde yerleştirilir.
   function updateCaptionLayout(){
     if(lightbox.hidden) return;
     var media = lbImg.hidden ? lbCanvas : lbImg;
@@ -1664,10 +1669,11 @@
     var viewportH = window.innerHeight;
     var spaceRight = viewportW - mediaRect.right;
     var spaceBelow = viewportH - mediaRect.bottom;
-    var useSide = viewportW > 860 && spaceRight > 300;
+    var useSide = spaceRight > 300;
     var useBelow = !useSide && spaceBelow > 140;
     lbSide.classList.toggle('is-active', useSide || useBelow);
     lbSide.classList.toggle('is-below', useBelow);
+    lbStage.classList.toggle('is-caption-below', useBelow);
     if(useSide || useBelow){
       if(lbCaptionBox.parentNode !== lbSide) lbSide.appendChild(lbCaptionBox);
     } else {
