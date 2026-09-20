@@ -193,6 +193,8 @@
     height:auto;
   }
 
+  .home-scroll-hint{display:none;}
+
   .note{
     display:flex;
     gap:12px;
@@ -866,6 +868,34 @@
       flex:0 0 auto;
     }
     .mobile-nav-social-icon svg{width:13px; height:13px; fill:currentColor; display:block;}
+    .home-scroll-hint{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      margin:4px 0 30px;
+      padding-top:22px;
+      border-top:1px solid var(--line);
+      text-align:center;
+    }
+    .home-scroll-hint-arrow{
+      font-size:15px;
+      line-height:1;
+      color:var(--muted);
+      animation:home-scroll-bounce 1.6s ease-in-out infinite;
+    }
+    .home-scroll-hint-text{
+      font-family:'Space Mono', monospace;
+      font-size:11px;
+      letter-spacing:0.04em;
+      line-height:1.55;
+      color:var(--muted);
+      max-width:260px;
+    }
+    @keyframes home-scroll-bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(4px);}
+    }
     .content{padding:22px 18px 50px;}
     .lightbox{padding:8px;}
     .lightbox-panel{max-height:100vh;}
@@ -1244,6 +1274,19 @@
     heroImg.oncontextmenu = function(){ return false; };
     hero.appendChild(heroImg);
     content.appendChild(hero);
+
+    var scrollHint = document.createElement('div');
+    scrollHint.className = 'home-scroll-hint';
+    var scrollArrow = document.createElement('span');
+    scrollArrow.className = 'home-scroll-hint-arrow';
+    scrollArrow.setAttribute('aria-hidden', 'true');
+    scrollArrow.textContent = '↓';
+    var scrollText = document.createElement('span');
+    scrollText.className = 'home-scroll-hint-text';
+    scrollText.textContent = 'Karelerin devamı ve kategoriler için aşağı kaydırmaya devam edin.';
+    scrollHint.appendChild(scrollArrow);
+    scrollHint.appendChild(scrollText);
+    content.appendChild(scrollHint);
 
     var grid = document.createElement('div');
     grid.className = 'cat-grid';
