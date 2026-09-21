@@ -393,7 +393,7 @@
     gap:4px;
     padding:16px 18px 14px;
     text-align:left;
-    background:linear-gradient(to top, rgba(11,63,59,0.85) 0%, rgba(11,63,59,0.42) 32%, rgba(11,63,59,0) 62%);
+    background:linear-gradient(to top, rgba(251,251,249,0.94) 0%, rgba(251,251,249,0.6) 32%, rgba(251,251,249,0) 62%);
     opacity:0;
     transition:opacity .3s ease;
   }
@@ -401,8 +401,8 @@
     font-size:11px;
     letter-spacing:0.14em;
     text-transform:uppercase;
-    color:rgba(251,251,249,0.85);
-    text-shadow:0 1px 3px rgba(0,0,0,0.35);
+    color:var(--ink-soft);
+    text-shadow:none;
   }
   @media (hover:hover){
     button.cat-tile:hover .cat-tile-overlay,
@@ -438,7 +438,7 @@
   }
   button.cat-tile:hover .cat-tile-badge-fill,
   button.cat-tile:focus-visible .cat-tile-badge-fill{
-    background:rgba(11,63,59,0.68);
+    background:rgba(251,251,249,0.95);
     transform:scale(1.04);
   }
   .cat-tile-badge-name{
@@ -450,6 +450,12 @@
     text-align:center;
     color:#FBFBF9;
     text-shadow:0 2px 8px rgba(0,0,0,0.4);
+    transition:color .3s ease, text-shadow .3s ease;
+  }
+  button.cat-tile:hover .cat-tile-badge-name,
+  button.cat-tile:focus-visible .cat-tile-badge-name{
+    color:var(--ink);
+    text-shadow:none;
   }
 
   /* ---- sayfa panelleri (Hakkımda / İletişim / Sosyal Medya) ---- */
