@@ -282,7 +282,38 @@
   .home-hero-dot.is-active{background:#F1EFE4; transform:scale(1.35);}
   .home-hero-dot:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 
-  .home-scroll-hint{display:none;}
+  /* fotoğrafın altındaki "aşağı kaydır / keşfetmeye devam et" ipucu —
+     hem masaüstünde hem mobilde görünür, sadece metni cihaza göre değişir */
+  .home-scroll-hint{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    margin:4px 0 30px;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+    text-align:center;
+  }
+  .home-scroll-hint-arrow{
+    font-size:15px;
+    line-height:1;
+    color:var(--muted);
+    animation:home-scroll-bounce 1.6s ease-in-out infinite;
+  }
+  .home-scroll-hint-text{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.04em;
+    line-height:1.55;
+    color:var(--muted);
+    max-width:260px;
+  }
+  .home-scroll-hint-text-mobile{display:none;}
+  .home-scroll-hint-text-desktop{display:inline;}
+  @keyframes home-scroll-bounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(4px);}
+  }
 
   .note{
     display:flex;
@@ -366,14 +397,6 @@
     opacity:0;
     transition:opacity .3s ease;
   }
-  .cat-tile-overlay .cat-tile-name{
-    font-family:'Instrument Serif', serif;
-    font-style:italic;
-    font-weight:400;
-    font-size:clamp(20px,2.4vw,27px);
-    color:#FBFBF9;
-    text-shadow:0 1px 3px rgba(0,0,0,0.35);
-  }
   .cat-tile-overlay .cat-tile-sub{
     font-size:11px;
     letter-spacing:0.14em;
@@ -387,6 +410,46 @@
   }
   @media (hover:none){
     .cat-tile-overlay{opacity:1;}
+  }
+
+  /* seçki başlığı — üzerine gelmeden de her zaman görünür, kutunun tam
+     ortasında, altında zarif bir renkli dolgu ile öne çıkarılmış */
+  .cat-tile-badge{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1;
+  }
+  .cat-tile-badge-fill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    max-width:100%;
+    padding:12px 28px;
+    border-radius:40px;
+    background:rgba(11,63,59,0.5);
+    -webkit-backdrop-filter:blur(7px) saturate(1.1);
+    backdrop-filter:blur(7px) saturate(1.1);
+    box-shadow:0 10px 28px rgba(0,0,0,0.2);
+    transition:background .3s ease, transform .3s ease;
+  }
+  button.cat-tile:hover .cat-tile-badge-fill,
+  button.cat-tile:focus-visible .cat-tile-badge-fill{
+    background:rgba(11,63,59,0.68);
+    transform:scale(1.04);
+  }
+  .cat-tile-badge-name{
+    font-family:'Instrument Serif', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(26px,3.6vw,40px);
+    line-height:1.1;
+    text-align:center;
+    color:#FBFBF9;
+    text-shadow:0 2px 8px rgba(0,0,0,0.4);
   }
 
   /* ---- sayfa panelleri (Hakkımda / İletişim / Sosyal Medya) ---- */
@@ -958,34 +1021,9 @@
       flex:0 0 auto;
     }
     .mobile-nav-social-icon svg{width:13px; height:13px; fill:currentColor; display:block;}
-    .home-scroll-hint{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:8px;
-      margin:4px 0 30px;
-      padding-top:22px;
-      border-top:1px solid var(--line);
-      text-align:center;
-    }
-    .home-scroll-hint-arrow{
-      font-size:15px;
-      line-height:1;
-      color:var(--muted);
-      animation:home-scroll-bounce 1.6s ease-in-out infinite;
-    }
-    .home-scroll-hint-text{
-      font-family:'Space Mono', monospace;
-      font-size:11px;
-      letter-spacing:0.04em;
-      line-height:1.55;
-      color:var(--muted);
-      max-width:260px;
-    }
-    @keyframes home-scroll-bounce{
-      0%,100%{transform:translateY(0);}
-      50%{transform:translateY(4px);}
-    }
+    /* mobilde metin masaüstünden farklı — "kaydırın" yerine "keşfetmeye devam edin" değil */
+    .home-scroll-hint-text-mobile{display:inline;}
+    .home-scroll-hint-text-desktop{display:none;}
     .home-hero-nav{width:32px; height:32px; font-size:16px;}
     .home-hero-prev{left:8px;}
     .home-hero-next{right:8px;}
@@ -1484,11 +1522,15 @@
     scrollArrow.className = 'home-scroll-hint-arrow';
     scrollArrow.setAttribute('aria-hidden', 'true');
     scrollArrow.textContent = '↓';
-    var scrollText = document.createElement('span');
-    scrollText.className = 'home-scroll-hint-text';
-    scrollText.textContent = 'Karelerin devamı ve kategoriler için aşağı kaydırmaya devam edin.';
+    var scrollTextMobile = document.createElement('span');
+    scrollTextMobile.className = 'home-scroll-hint-text home-scroll-hint-text-mobile';
+    scrollTextMobile.textContent = 'Karelerin devamı ve kategoriler için aşağı kaydırmaya devam edin.';
+    var scrollTextDesktop = document.createElement('span');
+    scrollTextDesktop.className = 'home-scroll-hint-text home-scroll-hint-text-desktop';
+    scrollTextDesktop.textContent = 'Seçkileri incelemek için keşfetmeye devam edin.';
     scrollHint.appendChild(scrollArrow);
-    scrollHint.appendChild(scrollText);
+    scrollHint.appendChild(scrollTextMobile);
+    scrollHint.appendChild(scrollTextDesktop);
     content.appendChild(scrollHint);
 
     var grid = document.createElement('div');
@@ -1514,17 +1556,23 @@
       var overlay = document.createElement('span');
       overlay.className = 'cat-tile-overlay';
 
-      var name = document.createElement('span');
-      name.className = 'cat-tile-name';
-      name.textContent = c.label;
-      overlay.appendChild(name);
-
       var sub = document.createElement('span');
       sub.className = 'cat-tile-sub mono';
       sub.textContent = (c.tag || c.label) + ' · ' + list.length + ' kare';
       overlay.appendChild(sub);
 
       tile.appendChild(overlay);
+
+      var badge = document.createElement('span');
+      badge.className = 'cat-tile-badge';
+      var badgeFill = document.createElement('span');
+      badgeFill.className = 'cat-tile-badge-fill';
+      var badgeName = document.createElement('span');
+      badgeName.className = 'cat-tile-badge-name';
+      badgeName.textContent = c.label;
+      badgeFill.appendChild(badgeName);
+      badge.appendChild(badgeFill);
+      tile.appendChild(badge);
 
       tile.addEventListener('click', function(){ goTo(c.key); });
 
