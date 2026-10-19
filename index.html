@@ -755,6 +755,7 @@
     z-index:1;
     max-width:98vw;
     max-height:calc(100vh - 24px);
+    max-height:calc(100dvh - 24px);
     overflow-y:auto;
     overflow-x:hidden;
   }
@@ -809,6 +810,7 @@
     height:auto;
     max-width:100%;
     max-height:90vh;
+    max-height:90dvh;
     object-fit:contain;
     -webkit-user-select:none;
     user-select:none;
@@ -1037,9 +1039,9 @@
     .home-hero-dot{width:5px; height:5px;}
     .content{padding:22px 18px 50px;}
     .lightbox{padding:8px;}
-    .lightbox-panel{max-height:100vh;}
+    .lightbox-panel{max-height:100vh; max-height:100dvh;}
     .lightbox-stage.is-caption-below{flex-direction:column; gap:14px;}
-    .lightbox-art img{max-height:78vh;}
+    .lightbox-art img{max-height:78vh; max-height:78dvh;}
     .lightbox-close{top:10px; right:10px; width:34px; height:34px; font-size:15px;}
     .lightbox-nav{width:34px; height:34px; font-size:17px;}
     .lightbox-prev{left:6px;}
@@ -1902,23 +1904,50 @@
   // telefon/tablet) o boşluğa, sağda yer yoksa ama altında boş (siyah)
   // alan varsa (dikey telefon) hemen altına, hiç yer yoksa fotoğrafın
   // içine, sol alt köşeye hafif belirgin biçimde yerleştirilir.
+  function applyCaptionMode(side, below){
+    lbSide.classList.toggle('is-active', side || below);
+    lbSide.classList.toggle('is-below', below);
+    lbStage.classList.toggle('is-caption-below', below);
+    if(side || below){
+      if(lbCaptionBox.parentNode !== lbSide) lbSide.appendChild(lbCaptionBox);
+    } else {
+      if(lbCaptionBox.parentNode !== lbArt) lbArt.appendChild(lbCaptionBox);
+    }
+  }
+
   function updateCaptionLayout(){
     if(lightbox.hidden) return;
+    // Telefonun tarayıcı araç çubuğu (adres çubuğu, alt gezinme çubuğu)
+    // gösterilip gizlendikçe window.innerWidth/innerHeight güncel
+    // gerçek görünür alanı yansıtmayabilir — visualViewport varsa onu
+    // kullanıyoruz, cihazdan cihaza değişen bu farkı en aza indirmek için.
+    var vv = window.visualViewport;
+    var viewportW = vv ? vv.width : window.innerWidth;
+    var viewportH = vv ? vv.height : window.innerHeight;
     var media = lbImg.hidden ? lbCanvas : lbImg;
     var mediaRect = media.getBoundingClientRect();
-    var viewportW = window.innerWidth;
-    var viewportH = window.innerHeight;
     var spaceRight = viewportW - mediaRect.right;
     var spaceBelow = viewportH - mediaRect.bottom;
     var useSide = spaceRight > 300;
     var useBelow = !useSide && spaceBelow > 140;
-    lbSide.classList.toggle('is-active', useSide || useBelow);
-    lbSide.classList.toggle('is-below', useBelow);
-    lbStage.classList.toggle('is-caption-below', useBelow);
+
+    applyCaptionMode(useSide, useBelow);
+
+    // Gerçek yerleşimi bir kare sonra ölçüp doğruluyoruz: açıklama metni
+    // (uzun altyazı, cihaza göre değişen satır sayısı vb. yüzünden)
+    // tahmin ettiğimizden daha fazla yer kaplayıp beğeni butonunu
+    // görünür alanın dışına itiyorsa, her zaman görünür alanda kalan
+    // güvenli moda (fotoğrafın üzerine, küçük punto ile) geri düşüyoruz.
     if(useSide || useBelow){
-      if(lbCaptionBox.parentNode !== lbSide) lbSide.appendChild(lbCaptionBox);
-    } else {
-      if(lbCaptionBox.parentNode !== lbArt) lbArt.appendChild(lbCaptionBox);
+      requestAnimationFrame(function(){
+        if(lightbox.hidden) return;
+        var vv2 = window.visualViewport;
+        var vH = vv2 ? vv2.height : window.innerHeight;
+        var stageBottom = lbStage.getBoundingClientRect().bottom;
+        if(stageBottom > vH - 6){
+          applyCaptionMode(false, false);
+        }
+      });
     }
   }
 
@@ -2018,6 +2047,20 @@
   window.addEventListener('resize', function(){
     if(!lightbox.hidden) updateCaptionLayout();
   });
+  window.addEventListener('orientationchange', function(){
+    if(!lightbox.hidden) setTimeout(updateCaptionLayout, 60);
+  });
+  // iOS gibi tarayıcılarda adres/alt çubuk gösterilip gizlendikçe
+  // window resize olayı tetiklenmeyebilir ama visualViewport değişir —
+  // beğeni butonunun konumunu buna göre de güncelliyoruz.
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', function(){
+      if(!lightbox.hidden) updateCaptionLayout();
+    });
+    window.visualViewport.addEventListener('scroll', function(){
+      if(!lightbox.hidden) updateCaptionLayout();
+    });
+  }
 
   // ---- ilk yükleme ----
   route();
